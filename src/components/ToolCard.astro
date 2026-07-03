@@ -1,0 +1,48 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+}
+
+const { title, description, href } = Astro.props;
+---
+
+<li class="tool-card">
+  <a href={href} target="_blank" rel="noopener noreferrer">
+    <span class="tool-title">{title}</span>
+    <span class="tool-desc">{description}</span>
+  </a>
+</li>
+
+<style>
+  .tool-card a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    height: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: inherit;
+    transition: border-color var(--transition), background var(--transition);
+  }
+
+  .tool-card a:hover {
+    opacity: 1;
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .tool-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .tool-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+</style>

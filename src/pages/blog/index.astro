@@ -1,0 +1,101 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+---
+
+<Base title="blog — dave vader" description="writings by dave vader">
+  <div class="container">
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="name-title">blog</p>
+        <p class="tagline">notes, articles, misc.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      {
+        posts.length === 0 ? (
+          <p class="prose">No posts yet. Check back soon.</p>
+        ) : (
+          <ul class="post-list">
+            {posts.map((post) => (
+              <li>
+                <a href={`/blog/${post.id}`} class="post-row">
+                  <span class="post-title">{post.data.title}</span>
+                  <span class="post-meta">
+                    <span class="post-desc">{post.data.description}</span>
+                    <span class="post-date">{formatDate(post.data.pubDate)}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+</Base>
+
+<style>
+  .post-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .post-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: inherit;
+    transition: border-color var(--transition), background var(--transition);
+  }
+
+  .post-row:hover {
+    opacity: 1;
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .post-title {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .post-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+</style>

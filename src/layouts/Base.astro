@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/index.css';
 
 interface Props {
   title: string;
@@ -7,6 +8,13 @@ interface Props {
 }
 
 const { title, description = "dave vader's site" } = Astro.props;
+const pathname = Astro.url.pathname;
+
+const tabs = [
+  { label: 'home', href: '/' },
+  { label: 'games', href: '/games' },
+  { label: 'journal', href: '/journal' },
+];
 ---
 
 <!doctype html>
@@ -19,8 +27,58 @@ const { title, description = "dave vader's site" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <nav class="tab-nav">
+      <div class="tab-nav-inner">
+        {tabs.map(({ label, href }) => {
+          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          return (
+            <a href={href} class={`tab${active ? ' tab-active' : ''}`}>
+              {label}
+            </a>
+          );
+        })}
+      </div>
+    </nav>
     <main>
       <slot />
     </main>
   </body>
 </html>
+
+<style>
+  .tab-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-nav-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 0;
+  }
+
+  .tab {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding: 0.75rem 1rem 0.65rem;
+    border-bottom: 2px solid transparent;
+    transition: color var(--transition), border-color var(--transition);
+    letter-spacing: 0.04em;
+  }
+
+  .tab:hover {
+    opacity: 1;
+    color: var(--text);
+  }
+
+  .tab-active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+</style>

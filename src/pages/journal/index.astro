@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 
-const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+const posts = (await getCollection("journal", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
@@ -15,12 +15,12 @@ function formatDate(date: Date) {
 }
 ---
 
-<Base title="blog — dave vader" description="writings by dave vader">
+<Base title="journal — dave vader" description="writings by dave vader">
   <div class="container">
     <section class="hero">
       <div class="hero-inner">
-        <p class="name-title">blog</p>
-        <p class="tagline">notes, articles, misc.</p>
+        <p class="name-title">journal</p>
+        <p class="tagline">notes, thoughts, misc.</p>
       </div>
     </section>
 
@@ -32,7 +32,7 @@ function formatDate(date: Date) {
           <ul class="post-list">
             {posts.map((post) => (
               <li>
-                <a href={`/blog/${post.id}`} class="post-row">
+                <a href={`/journal/${post.id.replace(/\.[^.]+$/, '')}`} class="post-row">
                   <span class="post-title">{post.data.title}</span>
                   <span class="post-meta">
                     <span class="post-desc">{post.data.description}</span>

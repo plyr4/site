@@ -1,0 +1,51 @@
+---
+import Base from "../layouts/Base.astro";
+import GameCard from "../components/GameCard.astro";
+import ToolCard from "../components/ToolCard.astro";
+import { games, unityTools } from "../data/games";
+
+---
+
+<Base title="games — dave vader">
+  <div class="container">
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="name-title">games</p>
+        <p class="tagline">things i've made.</p>
+      </div>
+    </section>
+
+    <section class="section" id="games">
+      <h2 class="section-title">games</h2>
+      <ul class="game-grid">
+        {
+          games.map((game) => (
+            <GameCard
+              title={game.title}
+              description={game.description}
+              bannerImg={game.bannerImg}
+              demoHref={game.demoHref}
+            />
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="section" id="unity-tools">
+      <h2 class="section-title">unity tools</h2>
+      <ul class="game-grid">
+        {
+          unityTools.map((tool) => (
+            <ToolCard
+              title={tool.title}
+              description={tool.description}
+              href={tool.href}
+            />
+          ))
+        }
+      </ul>
+    </section>
+
+    <footer class="footer"></footer>
+  </div>
+</Base>

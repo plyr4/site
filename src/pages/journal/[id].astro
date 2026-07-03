@@ -3,9 +3,9 @@ import Base from "../../layouts/Base.astro";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const posts = await getCollection("journal", ({ data }) => !data.draft);
   return posts.map((post) => ({
-    params: { id: post.id },
+    params: { id: post.id.replace(/\.[^.]+$/, '') },
     props: { post },
   }));
 }
@@ -26,7 +26,7 @@ function formatDate(date: Date) {
   <div class="container">
     <section class="hero">
       <div class="hero-inner">
-        <a href="/blog" class="back-link">← blog</a>
+        <a href="/journal" class="back-link">← journal</a>
         <p class="name-title">{post.data.title}</p>
         <p class="tagline">{formatDate(post.data.pubDate)}</p>
       </div>

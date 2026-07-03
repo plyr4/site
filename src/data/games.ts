@@ -1,27 +1,57 @@
 export const games = [
     {
+        title: "Mlord",
+        description: "protect the caravan",
+        bannerImg: "/games/mlord.png",
+        demoHref: "https://plyr4.github.io/mlord",
+    },
+    {
         title: "Margarita Mayhem",
-        description: "Keep the drinks flowing.",
+        description: "keep the drinks flowing",
         bannerImg: "/games/margarita-mayhem.png",
         demoHref: "https://plyr4.itch.io/margarita-mayhem",
     },
     {
         title: "Lovoflow",
-        description: "Achieve tranquility.",
+        description: "achieve tranquility",
         bannerImg: "/games/lovoflow.gif",
         demoHref: "https://plyr4.itch.io/lovoflow",
     },
     {
+        title: "Neebo's Big Adventure",
+        description: "help him find his way home",
+        bannerImg: "/games/neebo.png",
+        demoHref: "https://plyr4.github.io/unity-ufo",
+    },
+    {
         title: "Djimm's Revenge",
-        description: "Escape the temple.",
+        description: "escape the temple",
         bannerImg: "/games/djimms-revenge.png",
         demoHref: "https://github.com/plyr4/djimms-revenge",
     },
     {
-        title: "Mlord",
-        description: "Protect the caravan.",
-        bannerImg: "/games/mlord.png",
-        demoHref: "https://plyr4.github.io/mlord",
+        title: "Virtual Pet Kaiju",
+        description: "raise and battle kaiju pets",
+        bannerImg: "/games/vpk.png",
+        demoHref: "https://github.com/dvccllc/virtual-pet-kaiju",
+    },
+    {
+        title: "Thanos Teaches Typing",
+        description: "inevitably learn to type",
+        bannerImg: "/games/thanos.png",
+        demoHref: "https://dvccllc.github.io/ldjam-game-50/",
+    },
+    {
+        title: "Thrifty Thieves",
+        description: "2v2 bank heists",
+        bannerImg: "/games/thrifty.png",
+        demoHref: "https://www.youtube.com/watch?v=ZGRaAKTLC3A",
+    },
+    {
+        title: "Deep Space",
+        description: "Asteroids rip-off in C++",
+        bannerImg: "/games/deep-space.png",
+        demoHref: "https://github.com/plyr4/deep-space",
     },
 ];
 

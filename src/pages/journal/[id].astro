@@ -84,6 +84,14 @@ function formatDate(date: Date) {
     color: var(--accent);
   }
 
+  .prose-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    margin: 1rem 0;
+    display: block;
+  }
+
   .prose-content :global(code) {
     font-family: var(--font-mono);
     font-size: 0.85em;

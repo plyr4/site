@@ -32,7 +32,7 @@ function formatDate(date: Date) {
           <ul class="post-list">
             {posts.map((post) => (
               <li>
-                <a href={`/journal/${post.id.replace(/\.[^.]+$/, '')}`} class="post-row">
+                <a href={`${import.meta.env.BASE_URL}journal/${post.id.replace(/\.[^.]+$/, '')}`} class="post-row">
                   <span class="post-title">{post.data.title}</span>
                   <span class="post-meta">
                     <span class="post-desc">{post.data.description}</span>

@@ -9,11 +9,12 @@ interface Props {
 
 const { title, description = "dave vader's site" } = Astro.props;
 const pathname = Astro.url.pathname;
+const base = import.meta.env.BASE_URL; // '/site/'
 
 const tabs = [
-  { label: 'home', href: '/' },
-  { label: 'games', href: '/games' },
-  { label: 'journal', href: '/journal' },
+  { label: 'home', href: base },
+  { label: 'games', href: `${base}games` },
+  { label: 'journal', href: `${base}journal` },
 ];
 ---
 
@@ -23,14 +24,16 @@ const tabs = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
     <title>{title}</title>
   </head>
   <body>
     <nav class="tab-nav">
       <div class="tab-nav-inner">
         {tabs.map(({ label, href }) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const active = href === base
+            ? pathname === base || pathname === base.replace(/\/$/, '')
+            : pathname.startsWith(href);
           return (
             <a href={href} class={`tab${active ? ' tab-active' : ''}`}>
               {label}

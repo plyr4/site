@@ -12,7 +12,7 @@ const { title, description, bannerImg, demoHref } = Astro.props;
 <li class="game-card">
   <a href={demoHref} target="_blank" rel="noopener noreferrer">
     <div class="game-banner">
-      <img src={`${import.meta.env.BASE_URL}${bannerImg.replace(/^\//, '')}`} alt={`${title} banner`} />
+      <img src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}${bannerImg}`} alt={`${title} banner`} />
     </div>
     <div class="game-info">
       <span class="game-title">{title}</span>

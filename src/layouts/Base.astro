@@ -1,0 +1,75 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "dave's personal site" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <style>
+      /* ── Reset & Base ──────────────────────────────── */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0d0d0d;
+        --surface: #161616;
+        --border: #2a2a2a;
+        --text: #e8e8e8;
+        --muted: #888;
+        --accent: #7c8cf8;
+        --accent-dim: rgba(124, 140, 248, 0.15);
+        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        --radius: 8px;
+        --transition: 200ms ease;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.7;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: opacity var(--transition);
+      }
+
+      a:hover {
+        opacity: 0.75;
+      }
+
+      main {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

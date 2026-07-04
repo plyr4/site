@@ -63,7 +63,7 @@ export const unityTools = [
     },
     {
         title: "unity-state-machine",
-        description: "directed acyclical state machine",
+        description: "finite state machine for building game logic",
         href: "https://github.com/plyr4/unity-game-state-machine",
     },
     {

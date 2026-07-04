@@ -1,13 +1,15 @@
 # plyr4/site
 
-Personal site for [plyr4.github.io](https://plyr4.github.io) — built with [Astro](https://astro.build).
+dave vader's personal site
 
-About, games, and a journal.
+https://plyr4.com
 
-## dev
+## Development
 
 ```sh
 nvm use
 npm i
 npm run dev
 ```
+
+built with [Astro](https://astro.build)

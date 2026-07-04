@@ -11,7 +11,11 @@ const recentPosts = (await getCollection("journal", ({ data }) => !data.draft))
   .slice(0, 3);
 
 function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 const links = [
@@ -19,15 +23,16 @@ const links = [
   { label: "itch.io", href: "https://plyr4.itch.io" },
   { label: "email", href: "mailto:davelvader@gmail.com" },
 ];
-
 ---
 
-<Base title="dave vader">
+<Base>
   <div class="container">
     <section class="hero">
       <div class="hero-inner">
-        <p class="name-title">dave vader</p>
-        <p class="tagline">coding. making games.</p>
+        <p class="name-title">
+          dave vader <span class="username">(@plyr4)</span>
+        </p>
+        <p class="tagline">coding. making things.</p>
         <nav class="link-row">
           {
             links.map(({ label, href }) => (
@@ -48,9 +53,10 @@ const links = [
     <section class="section" id="about">
       <h2 class="section-title">about</h2>
       <p class="prose">
-        i work at Target in engineering infrastructure. 
-      </br>i studied CS at Michigan, and i make games in my free
-        time.
+        my name is dave.
+        <br/>i studied CS at
+        Michigan, and i make games in my free time.
+        <br/>i work at Target in engineering infrastructure.
       </p>
     </section>
 
@@ -59,11 +65,7 @@ const links = [
       <ul class="game-grid">
         {
           projects.map(({ title, description, href }) => (
-            <ToolCard
-              title={title}
-              description={description}
-              href={href}
-            />
+            <ToolCard title={title} description={description} href={href} />
           ))
         }
       </ul>
@@ -106,7 +108,10 @@ const links = [
         {
           recentPosts.map((post) => (
             <li>
-              <a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/journal/${post.id.replace(/\.[^.]+$/, '')}`} class="post-row">
+              <a
+                href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/journal/${post.id.replace(/\.[^.]+$/, "")}`}
+                class="post-row"
+              >
                 <span class="post-title">{post.data.title}</span>
                 <span class="post-meta">
                   <span class="post-desc">{post.data.description}</span>
@@ -117,15 +122,24 @@ const links = [
           ))
         }
       </ul>
-      <a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/journal`} class="see-all">all entries →</a>
+      <a
+        href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/journal`}
+        class="see-all">all entries →</a
+      >
     </section>
 
-    <footer class="footer">
-    </footer>
+    <footer class="footer"></footer>
   </div>
 </Base>
 
 <style>
+  .username {
+    font-size: 1.2rem;
+    font-weight: normal;
+    font-family: var(--font-mono);
+    color: var(--muted);
+  }
+
   .post-list {
     list-style: none;
     display: flex;
@@ -143,7 +157,9 @@ const links = [
     border-radius: var(--radius);
     background: var(--surface);
     color: inherit;
-    transition: border-color var(--transition), background var(--transition);
+    transition:
+      border-color var(--transition),
+      background var(--transition);
   }
 
   .post-row:hover {

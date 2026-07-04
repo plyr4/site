@@ -1,23 +1,8 @@
 export const projects = [
     {
         title: "vela",
-        description: "Target's official CICD framework",
-        href: "https://go-vela.github.io/docs/",
-    },
-    {
-        title: "vela/ui",
-        description: "CICD framework frontend",
-        href: "https://github.com/go-vela/ui",
-    },
-    {
-        title: "vela/server",
-        description: "CICD framework backend",
-        href: "https://github.com/go-vela/server",
-    },
-    {
-        title: "vela/worker",
-        description: "CICD framework build executor",
-        href: "https://github.com/go-vela/worker",
+        description: "Target's CICD framework",
+        href: "https://github.com/go-vela",
     },
     {
         title: "pen-plotter",
@@ -25,9 +10,19 @@ export const projects = [
         href: "https://github.com/plyr4/pen-plotter-art",
     },
     {
+        title: "margarita-mayhem",
+        description: "barback arcade simulator",
+        href: "https://github.com/plyr4/margarita-mayhem",
+    },
+    {
         title: "go-ebiten-multiplayer",
         description: "Go, ebitengine and websockets",
         href: "https://github.com/plyr4/go-ebiten-multiplayer",
+    },
+    {
+        title: "skelly",
+        description: "rule-based auto response slackbot",
+        href: "https://github.com/plyr4/skelly",
     },
     {
         title: "home-assistant-laundry",
@@ -36,7 +31,7 @@ export const projects = [
     },
     {
         title: "site",
-        description: "this site, minimal personal page built with astro",
+        description: "minimal personal website",
         href: "https://github.com/plyr4/site",
     },
 ];

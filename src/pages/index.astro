@@ -2,9 +2,13 @@
 import Base from "../layouts/Base.astro";
 import GameCard from "../components/GameCard.astro";
 import ToolCard from "../components/ToolCard.astro";
-import { games, unityTools } from "../data/games";
-import { projects } from "../data/projects";
+import { unityTools } from "../content/tools/tools";
+import { projects } from "../content/projects/projects";
 import { getCollection } from "astro:content";
+
+const games = (await getCollection("games", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
 
 const recentPosts = (await getCollection("journal", ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -54,9 +58,8 @@ const links = [
       <h2 class="section-title">about</h2>
       <p class="prose">
         my name is dave.
-        <br/>i studied CS at
-        Michigan, and i make games in my free time.
-        <br/>i work at Target in engineering infrastructure.
+        <br />i studied CS at Michigan, and i make games in my free time.
+        <br />i work at Target in engineering infrastructure.
       </p>
     </section>
 
@@ -77,10 +80,10 @@ const links = [
         {
           games.map((game) => (
             <GameCard
-              title={game.title}
-              description={game.description}
-              bannerImg={game.bannerImg}
-              demoHref={game.demoHref}
+              id={game.id.replace(/\.[^.]+$/, "")}
+              title={game.data.title}
+              tagline={game.data.tagline}
+              bannerImg={game.data.bannerImg}
             />
           ))
         }

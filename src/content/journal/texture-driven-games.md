@@ -1,12 +1,12 @@
 ---
-title: lovoflow
+title: texture driven games
 description: making a game with a single 32x32 texture and a shader
 pubDate: 2025-01-29
 ---
 
 "Lovoflow" was my solo-dev submission for [Global Game Jam](https://globalgamejam.org/) built in a single week for the theme "Bubbles".
 
-![lovoflow](./lovoflow-2.png)
+![lovoflow-2](../../../public/games/lovoflow-2.png)
 
 The game runs on an HLSL shader-based implementation of [Metaballs](https://en.wikipedia.org/wiki/Metaballs).
 

@@ -3,15 +3,25 @@ import Base from "../../layouts/Base.astro";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("journal", ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  const posts = (await getCollection("journal", ({ data }) => !data.draft))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return posts.map((post, i) => ({
     params: { id: post.id.replace(/\.[^.]+$/, "") },
-    props: { post },
+    props: {
+      post,
+      prev: i > 0
+        ? { id: posts[i - 1].id.replace(/\.[^.]+$/, ""), title: posts[i - 1].data.title }
+        : null,
+      next: i < posts.length - 1
+        ? { id: posts[i + 1].id.replace(/\.[^.]+$/, ""), title: posts[i + 1].data.title }
+        : null,
+    },
   }));
 }
 
-const { post } = Astro.props;
+const { post, prev, next } = Astro.props;
 const { Content } = await render(post);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("en-US", {
@@ -40,6 +50,23 @@ function formatDate(date: Date) {
         <Content />
       </article>
     </section>
+
+    <nav class="item-nav">
+      {
+        prev ? (
+          <a href={`${base}/journal/${prev.id}`} class="nav-btn">← {prev.title}</a>
+        ) : (
+          <span class="nav-btn nav-btn--disabled">←</span>
+        )
+      }
+      {
+        next ? (
+          <a href={`${base}/journal/${next.id}`} class="nav-btn">{next.title} →</a>
+        ) : (
+          <span class="nav-btn nav-btn--disabled">→</span>
+        )
+      }
+    </nav>
   </div>
 </Base>
 
@@ -95,6 +122,19 @@ function formatDate(date: Date) {
     display: block;
   }
 
+  .prose-content :global(p:has(img + img)) {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .prose-content :global(p:has(img + img) img) {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    width: 100%;
+  }
+
   .prose-content :global(code) {
     font-family: var(--font-mono);
     font-size: 0.85em;
@@ -131,5 +171,31 @@ function formatDate(date: Date) {
     color: var(--muted);
     font-style: italic;
     margin-bottom: 1rem;
+  }
+
+  .item-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .nav-btn {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: color var(--transition);
+  }
+
+  .nav-btn:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  .nav-btn--disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
   }
 </style>

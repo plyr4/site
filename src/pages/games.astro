@@ -14,13 +14,11 @@ const games = (await getCollection("games", ({ data }) => !data.draft)).sort(
   <div class="container">
     <section class="hero">
       <div class="hero-inner">
-        <p class="name-title">games</p>
-        <p class="tagline">things i've made.</p>
+        <p class="name-title">games <span class="subtitle">(and tools)</span></p>
       </div>
     </section>
 
     <section class="section" id="games">
-      <h2 class="section-title">games</h2>
       <ul class="game-grid">
         {
           games.map((game) => (

@@ -2,10 +2,10 @@ import {
     type PizzaModel, GameState
 } from "../model";
 import type { PizzaView } from "../view";
-import type { PizzaState } from "./state.ts";
+import type { PizzaState } from "./state";
 import type { PizzaUI, ButtonHit } from "../ui";
 import type { Topping } from "../toppings/topping";
-import * as States from "./index.ts";
+import * as States from "./index";
 
 const COLOR_VALUE_LABEL = "#f6ce4a";
 const COLOR_TOPPING_LABEL = "#c8c8c8";

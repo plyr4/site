@@ -2,7 +2,7 @@
 order: 1
 title: Mlord
 tagline: micro hex-grid battler
-bannerImg: games/mlord.png
+bannerImg: ../../assets/games/mlord.png
 demoLink: https://plyr4.github.io/mlord
 ---
 
@@ -10,11 +10,11 @@ demoLink: https://plyr4.github.io/mlord
 
 it mixes unit management and hex-grid tower defense with light procedural elements to make a simple puzzle battler where game-altering relics help you outwit your foes
 
-![mlord-1](../../../public/games/mlord-1.png)
+![mlord-1](../../assets/games/mlord-1.png)
 
-![mlord-2](../../../public/games/mlord-2.png)
+![mlord-2](../../assets/games/mlord-2.png)
 
-![mlord-3](../../../public/games/mlord-3.png)
+![mlord-3](../../assets/games/mlord-3.png)
 
 i drew inspiration from games like Balatro, Heroes of Might and Magic, and Into the Breach
 

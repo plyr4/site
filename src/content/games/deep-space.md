@@ -2,7 +2,7 @@
 order: 9
 title: Deep Space
 tagline: Asteroids rip-off in C++
-bannerImg: games/deep-space.png
+bannerImg: ../../assets/games/deep-space.png
 githubLink: https://github.com/plyr4/deep-space
 ---
 

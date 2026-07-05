@@ -2,7 +2,7 @@
 order: 2
 title: Margarita Mayhem
 tagline: keep the drinks flowing
-bannerImg: games/margarita-mayhem.png
+bannerImg: ../../assets/games/margarita-mayhem.png
 demoLink: https://plyr4.itch.io/margarita-mayhem
 githubLink: https://github.com/plyr4/margarita-mayhem
 ---
@@ -21,7 +21,7 @@ DAVE WE NEED MORE ICE!
 
 i made the game in a week for [LOWREZJAM](https://itch.io/jam/lowrezjam-2025/rate/3810595), a game jam where the max resolution is 64x64. i built it in Unity and hand crafted all the art, music, sounds, code etc
 
-![margarita-mayhem-2](../../../public/games/margarita-mayhem-2.png)
-![margarita-mayhem-gif](../../../public/games/margarita-mayhem.gif)
+![margarita-mayhem-2](../../assets/games/margarita-mayhem-2.png)
+![margarita-mayhem-gif](/games/margarita-mayhem.gif)
 
 **Margarita Mayhem** was inspired by [Sushi Belt](https://munro.itch.io/sushi-belt)

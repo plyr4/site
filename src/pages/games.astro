@@ -29,6 +29,7 @@ const games = (await getCollection("games", ({ data }) => !data.draft)).sort(
               title={game.data.title}
               tagline={game.data.tagline}
               bannerImg={game.data.bannerImg}
+              bannerGif={game.data.bannerGif}
             />
           ))
         }

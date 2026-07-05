@@ -2,7 +2,7 @@
 order: 5
 title: "Djimm's Revenge"
 tagline: single-room platformer
-bannerImg: games/djimms-revenge.png
+bannerImg: ../../assets/games/djimms-revenge.png
 githubLink: https://github.com/plyr4/djimms-revenge
 ---
 
@@ -14,4 +14,4 @@ it was good practice in actually completing a single-player game with art, sound
 
 i found royalty-free assets for music and art. i struggled a lot with animations and rigging, but finally learned to use [Mixamo](www.mixamo.com)
 
-![djimms-1](../../../public/games/djimms-revenge-1.png)
+![djimms-1](../../assets/games/djimms-revenge-1.png)

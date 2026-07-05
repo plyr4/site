@@ -1,22 +1,26 @@
 ---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
 interface Props {
   id: string;
   title: string;
   tagline: string;
-  bannerImg: string;
+  bannerImg?: ImageMetadata;
+  bannerGif?: string;
 }
 
-const { id, title, tagline, bannerImg } = Astro.props;
+const { id, title, tagline, bannerImg, bannerGif } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <li class="game-card">
   <a href={`${base}/games/${id}`}>
     <div class="game-banner">
-      <img
-        src={`${base}/${bannerImg}`}
-        alt={`${title} banner`}
-      />
+      {bannerGif
+        ? <img src={bannerGif} alt={`${title} banner`} loading="lazy" />
+        : bannerImg && <Image src={bannerImg} alt={`${title} banner`} loading="lazy" />
+      }
     </div>
     <div class="game-info">
       <span class="game-title">{title}</span>

@@ -2,7 +2,7 @@
 order: 7
 title: Thrifty Thieves
 tagline: 2v2 bank heist platformer
-bannerImg: games/thrifty.png
+bannerImg: ../../assets/games/thrifty.png
 trailerLink: https://www.youtube.com/watch?v=ZGRaAKTLC3A
 ---
 
@@ -14,11 +14,11 @@ turns out puzzle design is difficult, and that idea never came to be
 
 me and my good friend Scheebs were just testing out mechanics trying to figure out what to build when we realized it was fun to just shoot each other, and take whatever the other person was carrying at the time
 
-![thrifty-2](../../../public/games/thrifty-2.png)
-![thrifty-1](../../../public/games/thrifty-1.png)
+![thrifty-2](../../assets/games/thrifty-2.png)
+![thrifty-1](../../assets/games/thrifty-1.png)
 
 we added a dodge roll, and a truck to throw goodies in, and the rest is history.
 
 the late pivot saved our grade and we ended up placing 2nd in a game dev competition hosted by EA
 
-![thrifty-3](../../../public/games/thrifty-2.jpg)
+![thrifty-3](../../assets/games/thrifty-2.jpg)

@@ -14,10 +14,11 @@ const journal = defineCollection({
 
 const games = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/games' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     tagline: z.string(),
-    bannerImg: z.string(),
+    bannerImg: image().optional(),
+    bannerGif: z.string().optional(),
     order: z.number().optional().default(999),
     description: z.string().optional(),
     demoLink: z.url().optional(),

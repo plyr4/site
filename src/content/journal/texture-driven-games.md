@@ -6,7 +6,7 @@ pubDate: 2025-01-29
 
 "Lovoflow" was my solo-dev submission for [Global Game Jam](https://globalgamejam.org/) built in a single week for the theme "Bubbles".
 
-![lovoflow-2](../../../public/games/lovoflow-2.png)
+![lovoflow-2](../../assets/games/lovoflow-2.png)
 
 The game runs on an HLSL shader-based implementation of [Metaballs](https://en.wikipedia.org/wiki/Metaballs).
 

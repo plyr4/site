@@ -2,7 +2,7 @@
 order: 8
 title: Thanos Teaches Typing
 tagline: Marvel typing challenge
-bannerImg: games/thanos.png
+bannerImg: ../../assets/games/thanos.png
 demoLink: https://dvccllc.github.io/ldjam-game-50/
 githubLink: https://github.com/dvccllc/ldjam-game-50
 ---

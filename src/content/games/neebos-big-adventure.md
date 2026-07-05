@@ -2,7 +2,7 @@
 order: 3
 title: "Neebo's Big Adventure"
 tagline: whacky ufo flyer
-bannerImg: games/neebo.png
+bannerImg: ../../assets/games/neebo.png
 demoLink: https://plyr4.github.io/unity-ufo
 ---
 
@@ -10,11 +10,11 @@ demoLink: https://plyr4.github.io/unity-ufo
 
 it mixes elements from Katamari Damacy and Untitled Goose Game into a sandbox that is hardly "playable" but surprisingly fun
 
-![neebo-1](../../../public/games/neebo-1.png)
-![neebo-2](../../../public/games/neebo-2.png)
+![neebo-1](../../assets/games/neebo-1.png)
+![neebo-2](../../assets/games/neebo-2.png)
 
-![neebo-3](../../../public/games/neebo-3.png)
-![neebo-4](../../../public/games/neebo-4.png)
+![neebo-3](../../assets/games/neebo-3.png)
+![neebo-4](../../assets/games/neebo-4.png)
 
 
 the game has so much to love, but needs so much more work if it will ever make it anywhere past a single level demo

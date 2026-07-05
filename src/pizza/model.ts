@@ -71,7 +71,7 @@ function generateSeed(): string {
     return s;
 }
 
-function seedToNumber(seed: string): number {
+export function seedToNumber(seed: string): number {
     const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let n = 0;
     for (let i = 0; i < seed.length; i++) n = n * 36 + chars.indexOf(seed[i]);

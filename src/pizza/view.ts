@@ -5,6 +5,8 @@ import {
     PIZZA_RADIUS,
     CRUST_WIDTH,
     SLICE_COUNT,
+    mulberry32,
+    seedToNumber,
     type PizzaModel,
 } from "./model";
 import type { Topping } from "./toppings/topping";
@@ -169,7 +171,7 @@ export class PizzaView {
         this.dough.add(this.cheeseTopping.group);
 
         this.dough.add(new THREE.LineLoop(
-            makeWavyCircle(PIZZA_RADIUS, crustVariation, crustBumps / 3, crustPhase),
+            makeWavyCircle(PIZZA_RADIUS * 0.99, crustVariation, crustBumps / 3, crustPhase),
             this.matCrustLine
         ));
         this.dough.add(new THREE.LineLoop(

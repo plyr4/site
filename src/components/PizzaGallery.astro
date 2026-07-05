@@ -1,0 +1,205 @@
+---
+
+---
+
+<section class="pizza-gallery">
+    <h2 class="gallery-title">the pies</h2>
+    <p class="gallery-status" id="gallery-status">loading...</p>
+    <div id="pizza-gallery-grid" class="gallery-grid"></div>
+    <div class="gallery-pagination" id="gallery-pagination" hidden>
+        <button id="gallery-prev" class="page-btn">prev</button>
+        <span id="gallery-page"></span>
+        <button id="gallery-next" class="page-btn">next</button>
+    </div>
+</section>
+
+<style>
+    .pizza-gallery {
+        width: 100%;
+    }
+
+    .gallery-title {
+        margin-bottom: 1rem;
+    }
+
+    .gallery-status {
+        color: var(--muted, #888);
+        font-size: 0.875rem;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+    }
+
+    :global(.pizza-card) {
+        position: relative;
+        aspect-ratio: 1;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    :global(.pizza-canvas) {
+        display: block;
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+    }
+
+    :global(.pizza-seed) {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(8, 8, 8, 0.75);
+        color: #f6ce4a;
+        font-family: monospace;
+        font-size: 0.875rem;
+        letter-spacing: 0.1em;
+        opacity: 0;
+        transition: opacity 0.15s;
+        pointer-events: none;
+    }
+
+    :global(.pizza-card:hover .pizza-seed) {
+        opacity: 1;
+    }
+
+    .gallery-pagination {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: var(--muted, #888);
+    }
+
+    .page-btn {
+        background: #080808;
+        border: 1px solid var(--border);
+        color: #f6ce4a;
+        font-family: monospace;
+        font-size: 0.875rem;
+        padding: 0.25rem 0.75rem;
+        cursor: pointer;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.3;
+        cursor: default;
+    }
+</style>
+
+<script>
+    import { renderBakedPizza, type BakedPizza } from "../pages/pizza/app";
+
+    const PAGE_SIZE = 3;
+
+    const API = import.meta.env.PROD
+        ? "https://api.plyr4-pizza.workers.dev/pizzas"
+        : "http://localhost:8787/pizzas";
+
+    let allPizzas: BakedPizza[] = [];
+    let currentPage = 0;
+    let cleanups: Array<() => void> = [];
+
+    function totalPages(): number {
+        return Math.max(1, Math.ceil(allPizzas.length / PAGE_SIZE));
+    }
+
+    function renderPage(): void {
+        cleanups.forEach((fn) => fn());
+        cleanups = [];
+
+        const grid = document.getElementById("pizza-gallery-grid")!;
+        const pagination = document.getElementById(
+            "gallery-pagination",
+        ) as HTMLElement;
+        const pageSpan = document.getElementById("gallery-page")!;
+        const prevBtn = document.getElementById(
+            "gallery-prev",
+        ) as HTMLButtonElement;
+        const nextBtn = document.getElementById(
+            "gallery-next",
+        ) as HTMLButtonElement;
+
+        grid.innerHTML = "";
+
+        const page = allPizzas.slice(
+            currentPage * PAGE_SIZE,
+            (currentPage + 1) * PAGE_SIZE,
+        );
+
+        for (const pizza of page) {
+            const card = document.createElement("div");
+            card.className = "pizza-card";
+
+            const canvas = document.createElement("canvas");
+            canvas.className = "pizza-canvas";
+
+            const seedLabel = document.createElement("span");
+            seedLabel.className = "pizza-seed";
+            seedLabel.textContent = pizza.seed;
+
+            card.appendChild(canvas);
+            card.appendChild(seedLabel);
+            grid.appendChild(card);
+
+            cleanups.push(renderBakedPizza(canvas, pizza));
+        }
+
+        pagination.hidden = totalPages() <= 1;
+        pageSpan.textContent = `${currentPage + 1} / ${totalPages()}`;
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.disabled = currentPage >= totalPages() - 1;
+    }
+
+    async function loadGallery(): Promise<void> {
+        const status = document.getElementById("gallery-status") as HTMLElement;
+        try {
+            const res = await fetch(API);
+            if (!res.ok) throw new Error(`${res.status}`);
+            allPizzas = await res.json();
+            for (let i = allPizzas.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allPizzas[i], allPizzas[j]] = [allPizzas[j], allPizzas[i]];
+            }
+            status.hidden = true;
+            currentPage = 0;
+            renderPage();
+        } catch {
+            status.textContent = "could not load pies";
+        }
+    }
+
+    document.getElementById("gallery-prev")!.addEventListener("click", () => {
+        if (currentPage > 0) {
+            currentPage--;
+            renderPage();
+        }
+    });
+
+    document.getElementById("gallery-next")!.addEventListener("click", () => {
+        if (currentPage < totalPages() - 1) {
+            currentPage++;
+            renderPage();
+        }
+    });
+
+    window.addEventListener("pizza:baked", async (e: Event) => {
+        const pizza = (e as CustomEvent<BakedPizza>).detail;
+        try {
+            await fetch(API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(pizza),
+            });
+        } catch {}
+        await loadGallery();
+    });
+
+    loadGallery();
+</script>

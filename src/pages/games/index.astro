@@ -1,9 +1,9 @@
 ---
-import Base from "../layouts/Base.astro";
-import GameCard from "../components/GameCard.astro";
-import ToolCard from "../components/ToolCard.astro";
+import Base from "../../layouts/Base.astro";
+import GameCard from "../../components/GameCard.astro";
+import ToolCard from "../../components/ToolCard.astro";
 import { getCollection } from "astro:content";
-import { unityTools } from "../content/tools/tools";
+import { unityTools } from "../../content/tools/tools";
 
 const games = (await getCollection("games", ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,

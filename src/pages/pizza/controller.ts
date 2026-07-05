@@ -1,7 +1,8 @@
 import type { PizzaModel } from "./model";
 import type { PizzaView } from "./view";
 import type { PizzaUI } from "./ui";
-import { type PizzaState, StartState } from "./states";
+import { type PizzaState } from "./states/state";
+import * as States from "./states";
 
 export class PizzaController {
     private model: PizzaModel;
@@ -14,7 +15,7 @@ export class PizzaController {
         this.model = model;
         this.view = view;
         this.ui = ui;
-        this.currentState = new StartState();
+        this.currentState = new States.default.Start();
         this.currentState.onEnter(model, view);
     }
 

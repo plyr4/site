@@ -1,7 +1,10 @@
 import * as THREE from "three";
 
+const CIRCLE_SEGMENTS = 96;
+const WAVY_SEGMENTS = 128;
+
 export function makeCircle(radius: number): THREE.BufferGeometry {
-    const segments = 96;
+    const segments = CIRCLE_SEGMENTS;
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i < segments; i++) {
         const a = (i / segments) * Math.PI * 2;
@@ -16,7 +19,7 @@ export function makeWavyCircle(
     bumps: number,
     phase = 0
 ): THREE.BufferGeometry {
-    const segments = 128;
+    const segments = WAVY_SEGMENTS;
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i < segments; i++) {
         const a = (i / segments) * Math.PI * 2;
@@ -33,7 +36,7 @@ export function makeWavyRing(
     bumps: number,
     phase = 0
 ): THREE.BufferGeometry {
-    const segments = 128;
+    const segments = WAVY_SEGMENTS;
     const verts: number[] = [];
     const idx: number[] = [];
     for (let i = 0; i <= segments; i++) {

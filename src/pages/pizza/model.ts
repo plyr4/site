@@ -26,6 +26,44 @@ export interface PizzaModel {
     sliceAngles: number[];
 }
 
+export function createModel(): PizzaModel {
+    const seed = generateSeed();
+    const rng = mulberry32(seedToNumber(seed));
+    return {
+        seed,
+        state: GameState.Start,
+        pepperoniCount: 0,
+        cheeseLevel: 0,
+        bakingProgress: 0,
+        ...buildParams(rng),
+    };
+}
+
+export function createModelFromSeed(seed: string, pepperoniCount = 0, cheeseLevel = 0): PizzaModel {
+    const rng = mulberry32(seedToNumber(seed));
+    return {
+        seed,
+        state: GameState.Baked,
+        pepperoniCount,
+        cheeseLevel,
+        bakingProgress: 1,
+        ...buildParams(rng),
+    };
+}
+
+export function resetModel(model: PizzaModel): void {
+    const seed = generateSeed();
+    const rng = mulberry32(seedToNumber(seed));
+    Object.assign(model, {
+        seed,
+        state: GameState.Start,
+        pepperoniCount: 0,
+        cheeseLevel: 0,
+        bakingProgress: 0,
+        ...buildParams(rng),
+    });
+}
+
 function generateSeed(): string {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let s = "";
@@ -50,32 +88,41 @@ export function mulberry32(seed: number): () => number {
     };
 }
 
+const CRUST_VARIATION_MIN = 0.005;
+const CRUST_VARIATION_RANGE = 0.02;
+const CRUST_BUMPS_MIN = 16;
+const CRUST_BUMPS_RANGE = 16;
+const PEPPERONI_RINGS: { r: number; n: number }[] = [
+    { r: 0.22, n: 3 },
+    { r: 0.47, n: 7 },
+    { r: 0.67, n: 10 },
+];
+const PEPPERONI_ANGLE_JITTER = 0.28;
+const PEPPERONI_RADIUS_JITTER = 0.05;
+const SLICE_WEIGHT_JITTER = 0.18;
+
 function buildParams(rng: () => number): Pick<
     PizzaModel,
     "crustVariation" | "crustBumps" | "crustPhase" | "pepperoniPositions" | "sliceAngles"
 > {
-    const crustVariation = 0.005 + rng() * 0.02;
-    const crustBumps = Math.floor(16 + rng() * 16);
+    const crustVariation = CRUST_VARIATION_MIN + rng() * CRUST_VARIATION_RANGE;
+    const crustBumps = Math.floor(CRUST_BUMPS_MIN + rng() * CRUST_BUMPS_RANGE);
     const crustPhase = rng() * Math.PI * 2;
 
     const pepperoniPositions: [number, number][] = [];
-    const rings = [
-        { r: 0.22, n: 3 },
-        { r: 0.47, n: 7 },
-        { r: 0.67, n: 10 },
-    ];
+    const rings = PEPPERONI_RINGS;
     for (const ring of rings) {
         const offset = rng() * Math.PI * 2;
         for (let i = 0; i < ring.n; i++) {
             const baseA = (i / ring.n) * Math.PI * 2 + offset;
-            const a = baseA + (rng() - 0.5) * 0.28;
-            const r = ring.r + (rng() - 0.5) * 0.05;
+            const a = baseA + (rng() - 0.5) * PEPPERONI_ANGLE_JITTER;
+            const r = ring.r + (rng() - 0.5) * PEPPERONI_RADIUS_JITTER;
             pepperoniPositions.push([r * Math.cos(a), r * Math.sin(a)]);
         }
     }
 
     const weights: number[] = [];
-    for (let i = 0; i < SLICE_COUNT; i++) weights.push(1 + (rng() - 0.5) * 0.18);
+    for (let i = 0; i < SLICE_COUNT; i++) weights.push(1 + (rng() - 0.5) * SLICE_WEIGHT_JITTER);
     const total = weights.reduce((a, b) => a + b, 0);
     const sliceAngles: number[] = [];
     let acc = 0;
@@ -85,30 +132,4 @@ function buildParams(rng: () => number): Pick<
     }
 
     return { crustVariation, crustBumps, crustPhase, pepperoniPositions, sliceAngles };
-}
-
-export function createModel(): PizzaModel {
-    const seed = generateSeed();
-    const rng = mulberry32(seedToNumber(seed));
-    return {
-        seed,
-        state: GameState.Start,
-        pepperoniCount: 0,
-        cheeseLevel: 0,
-        bakingProgress: 0,
-        ...buildParams(rng),
-    };
-}
-
-export function resetModel(model: PizzaModel): void {
-    const seed = generateSeed();
-    const rng = mulberry32(seedToNumber(seed));
-    Object.assign(model, {
-        seed,
-        state: GameState.Start,
-        pepperoniCount: 0,
-        cheeseLevel: 0,
-        bakingProgress: 0,
-        ...buildParams(rng),
-    });
 }

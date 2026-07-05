@@ -26,17 +26,17 @@ export const projects = [
     },
     {
         title: "go-ebiten-multiplayer",
-        description: "Go, ebitengine and websockets",
+        description: "ebiten and websockets",
         href: "https://github.com/plyr4/go-ebiten-multiplayer",
     },
     {
         title: "skelly",
-        description: "rule-based auto response slackbot",
+        description: "rule-based slackbot",
         href: "https://github.com/plyr4/skelly",
     },
     {
-        title: "home-assistant-laundry",
-        description: "Home Assistant integration for laundry machine status",
+        title: "ha-laundry",
+        description: "Home Assistant integration",
         href: "https://github.com/plyr4/ha-laundry",
     },
     {

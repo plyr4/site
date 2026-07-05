@@ -12,7 +12,7 @@ the game was my final project for game design in a group with 3 classmates. it s
 
 turns out puzzle design is difficult, and that idea never came to be
 
-me and my good friend Scheebs were just testing out mechanics trying to figure out what to build when we realized it was fun to just shoot each other, and take whatever the other person was carrying at the time
+me and my pal Scheebs were testing out mechanics trying to build puzzles when we realized it was far more fun just trying to steal each other's carryable loot
 
 ![thrifty-2](../../assets/games/thrifty-2.png)
 ![thrifty-1](../../assets/games/thrifty-1.png)
@@ -22,3 +22,5 @@ we added a dodge roll, and a truck to throw goodies in, and the rest is history.
 the late pivot saved our grade and we ended up placing 2nd in a game dev competition hosted by EA
 
 ![thrifty-3](../../assets/games/thrifty-2.jpg)
+
+my brother Cam helped us with trailer voiceovers

@@ -16,6 +16,11 @@ const tabs = [
   { label: "games", href: `${base}/games` },
   { label: "journal", href: `${base}/journal` },
 ];
+
+const links = [
+  { label: "github", href: "https://github.com/plyr4" },
+  { label: "email", href: "mailto:davelvader@gmail.com" },
+];
 ---
 
 <!doctype html>
@@ -46,19 +51,35 @@ const tabs = [
   <body>
     <nav class="tab-nav">
       <div class="tab-nav-inner">
-        {
-          tabs.map(({ label, href }) => {
-            const active =
-              href === `${base}/`
-                ? pathname === `${base}/` || pathname === base
-                : pathname.startsWith(href);
-            return (
-              <a href={href} class={`tab${active ? " tab-active" : ""}`}>
+        <div class="tab-group">
+          {
+            tabs.map(({ label, href }) => {
+              const active =
+                href === `${base}/`
+                  ? pathname === `${base}/` || pathname === base
+                  : pathname.startsWith(href);
+              return (
+                <a href={href} class={`tab${active ? " tab-active" : ""}`}>
+                  {label}
+                </a>
+              );
+            })
+          }
+        </div>
+        <div class="link-row">
+          {
+            links.map(({ label, href }) => (
+              <a
+                href={href}
+                class="link-pill"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {label}
               </a>
-            );
-          })
-        }
+            ))
+          }
+        </div>
       </div>
     </nav>
     <main>
@@ -80,6 +101,12 @@ const tabs = [
     max-width: 640px;
     margin: 0 auto;
     padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tab-group {
     display: flex;
     gap: 0;
   }

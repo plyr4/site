@@ -8,9 +8,11 @@ githubLink: https://github.com/dvccllc/virtual-pet-kaiju
 
 **Virtual Pet Kaiju** is a **Tamagotchi** on your phone. Raise a Kaiju from a baby, train it, watch it evolve, then send it into battle online!
 
-**VPK** started as a passion-project between me and my older brother Cam. the inspiration is a lot of Godzilla, Ultraman, and when we were growing we were obsessed with **Digimon Virtual Pet Monsters**, but sadly i mostly remember my Digimon devolving into the slug creature (Numemon, maybe) because i was bad at taking care of it
+**VPK** started as a passion-project between me and my older brother Cam. the inspiration was a lot of Godzilla and Ultraman, and when we were growing we were obsessed with **Digimon Virtual Pet Monsters**
 
-eventually we started toying with making video games, largely me doing the programming, with Cam doing the art, theory-crafting, idea guru, etc. he *always* had the harder job
+sadly i remember my Digimon always devolving into the slug (Numemon, maybe?) because i was bad at taking care of it
+
+eventually me and Cam started toying with making video games, largely me doing the programming, with Cam doing the art, theory-crafting, ideas
 
 **Virtual Pet Kaiju** was originally an HTML web page before it was converted into a Unity app
 

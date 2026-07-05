@@ -9,7 +9,7 @@ githubLink: https://github.com/plyr4/lovoflow
 
 **Lovoflow** is a funky play-and-chill game that has you moving a lava bubble around a lamp using heat waves to collect orbs and grow the tranquility of the lamp
 
-i made it solo for Global Game Jam, it was the first game jam entry where i created all of the assets myself including art, sound, code, etc. using tools everyone has access to like [Sonic Pi](https://sonic-pi.net/)
+i made **Lovoflow** for [Global Game Jam](https://globalgamejam.org/games/2025/lovoflow-4), it was the first game jam entry where i created all of the assets myself including art, sound, code, etc. using tools everyone has access to like [Sonic Pi](https://sonic-pi.net/)
 
 **Lovoflow** was used to practice a "blob shader" that i was working on for a different game idea, where the entire game is one single texture shader with all of the game state written to a 32x32 texture file. check out the [metaballs journal entry](/journal/texture-driven-games). 
 

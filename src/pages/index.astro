@@ -21,12 +21,6 @@ function formatDate(date: Date) {
     day: "numeric",
   });
 }
-
-const links = [
-  { label: "github", href: "https://github.com/plyr4" },
-  { label: "itch.io", href: "https://plyr4.itch.io" },
-  { label: "email", href: "mailto:davelvader@gmail.com" },
-];
 ---
 
 <Base>
@@ -36,30 +30,17 @@ const links = [
         <p class="name-title">
           dave vader <span class="username">(@plyr4)</span>
         </p>
-        <p class="tagline">coding. making things.</p>
-        <nav class="link-row">
-          {
-            links.map(({ label, href }) => (
-              <a
-                href={href}
-                class="link-pill"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {label}
-              </a>
-            ))
-          }
-        </nav>
+        <!-- <p class="tagline">coding. making things.</p> -->
       </div>
     </section>
 
     <section class="section" id="about">
-      <h2 class="section-title">about</h2>
+      <!-- <h2 class="section-title">about</h2> -->
       <p class="prose">
         my name is dave.
+        <br />i live in minneapolis, working for Target in engineering infrastructure.
         <br />i studied CS at Michigan, and i make games in my free time.
-        <br />i work at Target in engineering infrastructure.
+        <br />
       </p>
     </section>
 

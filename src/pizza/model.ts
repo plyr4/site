@@ -35,7 +35,7 @@ export function createModel(): PizzaModel {
         pepperoniCount: 0,
         cheeseLevel: 0,
         bakingProgress: 0,
-        ...buildParams(rng),
+        ...buildParams(rng, false),
     };
 }
 
@@ -47,7 +47,7 @@ export function createModelFromSeed(seed: string, pepperoniCount = 0, cheeseLeve
         pepperoniCount,
         cheeseLevel,
         bakingProgress: 1,
-        ...buildParams(rng),
+        ...buildParams(rng, true),
     };
 }
 
@@ -60,7 +60,7 @@ export function resetModel(model: PizzaModel): void {
         pepperoniCount: 0,
         cheeseLevel: 0,
         bakingProgress: 0,
-        ...buildParams(rng),
+        ...buildParams(rng, false),
     });
 }
 
@@ -101,7 +101,7 @@ const PEPPERONI_ANGLE_JITTER = 0.28;
 const PEPPERONI_RADIUS_JITTER = 0.05;
 const SLICE_WEIGHT_JITTER = 0.18;
 
-function buildParams(rng: () => number): Pick<
+function buildParams(rng: () => number, sliced: boolean): Pick<
     PizzaModel,
     "crustVariation" | "crustBumps" | "crustPhase" | "pepperoniPositions" | "sliceAngles"
 > {
@@ -121,14 +121,16 @@ function buildParams(rng: () => number): Pick<
         }
     }
 
-    const weights: number[] = [];
-    for (let i = 0; i < SLICE_COUNT; i++) weights.push(1 + (rng() - 0.5) * SLICE_WEIGHT_JITTER);
-    const total = weights.reduce((a, b) => a + b, 0);
     const sliceAngles: number[] = [];
-    let acc = 0;
-    for (let i = 0; i < SLICE_COUNT; i++) {
-        // sliceAngles.push(acc);
-        acc += (weights[i] / total) * Math.PI * 2;
+    if (sliced) {
+        const weights: number[] = [];
+        for (let i = 0; i < SLICE_COUNT; i++) weights.push(1 + (rng() - 0.5) * SLICE_WEIGHT_JITTER);
+        const total = weights.reduce((a, b) => a + b, 0);
+        let acc = 0;
+        for (let i = 0; i < SLICE_COUNT; i++) {
+            sliceAngles.push(acc);
+            acc += (weights[i] / total) * Math.PI * 2;
+        }
     }
 
     return { crustVariation, crustBumps, crustPhase, pepperoniPositions, sliceAngles };

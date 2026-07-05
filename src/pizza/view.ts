@@ -51,7 +51,7 @@ const N_STEAM = 4;
 const STEAM_SEGS = 4;
 const STEAM_RISE = 0.55;
 const STEAM_WOBBLE = 0.035;
-const STEAM_COLOR = new THREE.Color("#d4c8b071");
+const STEAM_COLOR = new THREE.Color("#d4c8b0");
 
 export class PizzaView {
     private renderer: THREE.WebGLRenderer;

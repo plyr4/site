@@ -11,7 +11,6 @@ export function renderBakedPizza(canvas: HTMLCanvasElement, pizza: BakedPizza, z
     view.rebuild(model);
     view.toppings.forEach(t => t.sync(model));
     view.applyBakingColors(1, model);
-    view.startSteam();
 
     let animId: number;
     function loop(time: number): void {

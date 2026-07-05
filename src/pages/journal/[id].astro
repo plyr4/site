@@ -3,18 +3,27 @@ import Base from "../../layouts/Base.astro";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = (await getCollection("journal", ({ data }) => !data.draft))
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const posts = (
+    await getCollection("journal", ({ data }) => !data.draft)
+  ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
   return posts.map((post, i) => ({
     params: { id: post.id.replace(/\.[^.]+$/, "") },
     props: {
       post,
-      prev: i > 0
-        ? { id: posts[i - 1].id.replace(/\.[^.]+$/, ""), title: posts[i - 1].data.title }
-        : null,
-      next: i < posts.length - 1
-        ? { id: posts[i + 1].id.replace(/\.[^.]+$/, ""), title: posts[i + 1].data.title }
-        : null,
+      prev:
+        i > 0
+          ? {
+              id: posts[i - 1].id.replace(/\.[^.]+$/, ""),
+              title: posts[i - 1].data.title,
+            }
+          : null,
+      next:
+        i < posts.length - 1
+          ? {
+              id: posts[i + 1].id.replace(/\.[^.]+$/, ""),
+              title: posts[i + 1].data.title,
+            }
+          : null,
     },
   }));
 }
@@ -54,14 +63,18 @@ function formatDate(date: Date) {
     <nav class="item-nav">
       {
         prev ? (
-          <a href={`${base}/journal/${prev.id}`} class="nav-btn">← {prev.title}</a>
+          <a href={`${base}/journal/${prev.id}`} class="nav-btn">
+            ← {prev.title}
+          </a>
         ) : (
           <span class="nav-btn nav-btn--disabled">←</span>
         )
       }
       {
         next ? (
-          <a href={`${base}/journal/${next.id}`} class="nav-btn">{next.title} →</a>
+          <a href={`${base}/journal/${next.id}`} class="nav-btn">
+            {next.title} →
+          </a>
         ) : (
           <span class="nav-btn nav-btn--disabled">→</span>
         )

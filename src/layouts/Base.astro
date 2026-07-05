@@ -21,6 +21,18 @@ const tabs = [
 <!doctype html>
 <html lang="en">
   <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-KKXGWDX1W8"
+      is:inline></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-KKXGWDX1W8");
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
@@ -30,15 +42,7 @@ const tabs = [
     />
     <title>{title ? `${title} - plyr4` : "plyr4"}</title>
   </head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KKXGWDX1W8" is:inline></script>
-  <script is:inline>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'G-KKXGWDX1W8');
-  </script>
   <body>
     <nav class="tab-nav">
       <div class="tab-nav-inner">

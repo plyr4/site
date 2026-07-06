@@ -3,14 +3,9 @@
 ---
 
 <section class="pizza-gallery">
-    <h2 class="gallery-title">pie gallery</h2>
+    <h2 class="gallery-title">pie gallery <span id="gallery-count" class="gallery-count"></span></h2>
     <p class="gallery-status" id="gallery-status">loading...</p>
     <div id="pizza-gallery-grid" class="gallery-grid"></div>
-    <div class="gallery-pagination" id="gallery-pagination" hidden>
-        <button id="gallery-prev" class="page-btn">prev</button>
-        <span id="gallery-page"></span>
-        <button id="gallery-next" class="page-btn">next</button>
-    </div>
 </section>
 
 <style>
@@ -22,15 +17,39 @@
         margin-bottom: 1rem;
     }
 
+    .gallery-count {
+        font-size: 0.75rem;
+        font-family: var(--font-mono);
+        color: var(--muted, #888);
+        font-weight: normal;
+    }
+
     .gallery-status {
         color: var(--muted, #888);
         font-size: 0.875rem;
     }
 
     .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        display: flex;
+        flex-direction: row;
         gap: 0.75rem;
+        overflow-x: scroll;
+        padding-bottom: 0.5rem;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+    }
+
+    .gallery-grid::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .gallery-grid::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .gallery-grid::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
     }
 
     :global(.pizza-card.yours) {
@@ -58,6 +77,12 @@
         overflow: hidden;
     }
 
+    :global(#pizza-gallery-grid .pizza-card) {
+        flex: 0 0 126px;
+        width: 126px;
+        height: 126px;
+    }
+
     :global(.pizza-canvas) {
         display: block;
         width: 100%;
@@ -74,11 +99,11 @@
         flex-direction: column;
         gap: 0.2rem;
         padding: 0.4rem 0.5rem;
-        overflow-y: auto;
+        overflow: hidden;
         background: rgba(8, 8, 8, 0.75);
         color: #f6ce4a;
         font-family: monospace;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         letter-spacing: 0.1em;
         opacity: 0;
         transition: opacity 0.15s;
@@ -130,36 +155,11 @@
         opacity: 1;
     }
 
-    .gallery-pagination {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-        font-family: monospace;
-        font-size: 0.875rem;
-        color: var(--muted, #888);
-    }
 
-    .page-btn {
-        background: #080808;
-        border: 1px solid var(--border);
-        color: #f6ce4a;
-        font-family: monospace;
-        font-size: 0.875rem;
-        padding: 0.25rem 0.75rem;
-        cursor: pointer;
-    }
-
-    .page-btn:disabled {
-        opacity: 0.3;
-        cursor: default;
-    }
 </style>
 
 <script>
     import { renderBakedPizza, ratePizza, type BakedPizza } from "../pizza/app";
-
-    const PAGE_SIZE = 3;
 
     const PIZZAS_API_HOST = import.meta.env.PROD
         ? "https://api.plyr4-pizza.workers.dev"
@@ -170,7 +170,6 @@
     const CHEESE_MAX = 5;
 
     let allPizzas: BakedPizza[] = [];
-    let currentPage = 0;
     let yourPizzaSeed: string | null = null;
     let cleanups: Array<() => void> = [];
 
@@ -249,34 +248,14 @@
         return hover;
     }
 
-    function totalPages(): number {
-        return Math.max(1, Math.ceil(allPizzas.length / PAGE_SIZE));
-    }
-
-    function renderPage(): void {
+    function renderAll(): void {
         cleanups.forEach((fn) => fn());
         cleanups = [];
 
         const grid = document.getElementById("pizza-gallery-grid")!;
-        const pagination = document.getElementById(
-            "gallery-pagination",
-        ) as HTMLElement;
-        const pageSpan = document.getElementById("gallery-page")!;
-        const prevBtn = document.getElementById(
-            "gallery-prev",
-        ) as HTMLButtonElement;
-        const nextBtn = document.getElementById(
-            "gallery-next",
-        ) as HTMLButtonElement;
-
         grid.innerHTML = "";
 
-        const page = allPizzas.slice(
-            currentPage * PAGE_SIZE,
-            (currentPage + 1) * PAGE_SIZE,
-        );
-
-        for (const pizza of page) {
+        for (const pizza of allPizzas) {
             const card = document.createElement("div");
             card.className = "pizza-card";
             if (pizza.seed === yourPizzaSeed) card.classList.add("yours");
@@ -292,16 +271,14 @@
 
             cleanups.push(renderBakedPizza(canvas, pizza));
         }
-
-        pagination.hidden = totalPages() <= 1;
-        pageSpan.textContent = `${currentPage + 1} / ${totalPages()}`;
-        prevBtn.disabled = currentPage === 0;
-        nextBtn.disabled = currentPage >= totalPages() - 1;
     }
 
     async function loadGallery(): Promise<void> {
         const galleryStatus = document.getElementById(
             "gallery-status",
+        ) as HTMLElement;
+        const galleryCount = document.getElementById(
+            "gallery-count",
         ) as HTMLElement;
         try {
             const res = await fetch(`${PIZZAS_API_HOST}/pizzas`);
@@ -311,27 +288,12 @@
                 galleryStatus.textContent =
                     "no pies yet, bake one to add it to the gallery!";
             else galleryStatus.hidden = true;
-            currentPage = 0;
-            renderPage();
+            galleryCount.textContent = `(${allPizzas.length})`;
+            renderAll();
         } catch {
             galleryStatus.textContent = "couldn't find any pies";
-            // todo: track this
         }
     }
-
-    document.getElementById("gallery-prev")!.addEventListener("click", () => {
-        if (currentPage > 0) {
-            currentPage--;
-            renderPage();
-        }
-    });
-
-    document.getElementById("gallery-next")!.addEventListener("click", () => {
-        if (currentPage < totalPages() - 1) {
-            currentPage++;
-            renderPage();
-        }
-    });
 
     window.addEventListener("pizza:baked", async (e: Event) => {
         const pizza = (e as CustomEvent<BakedPizza>).detail;

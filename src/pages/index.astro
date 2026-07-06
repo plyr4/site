@@ -31,6 +31,10 @@ function formatDate(date: Date) {
         <p class="name-title">
           dave vader <span class="subtitle">(@plyr4)</span>
         </p>
+        <div class="link-row mobile-links">
+          <a href="https://github.com/plyr4" class="link-pill" target="_blank" rel="noopener noreferrer">github</a>
+          <a href="mailto:davelvader@gmail.com" class="link-pill">email</a>
+        </div>
       </div>
     </section>
 
@@ -46,8 +50,7 @@ function formatDate(date: Date) {
 
     <section class="section">
       <PizzaOfTheDay title="today's pie of the day" />
-      <br />
-      <p class="tagline">
+      <p class="tagline home-potd">
         <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/pizza`}
           >make a pizza</a
         > before you go!
@@ -190,5 +193,19 @@ function formatDate(date: Date) {
   .see-all:hover {
     color: var(--accent);
     opacity: 1;
+  }
+
+  .home-potd {
+    margin-top: 0.6rem;
+  }
+
+  .mobile-links {
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    .mobile-links {
+      display: flex;
+    }
   }
 </style>

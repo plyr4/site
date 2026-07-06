@@ -61,14 +61,14 @@ export class PizzaUI {
     }
 
     resize(clientWidth: number, clientHeight: number): void {
-        const texW = Math.max(1, Math.floor(clientWidth * window.devicePixelRatio * UI_PIXEL_SCALE));
+        const texW = Math.max(1, Math.floor(clientWidth * UI_PIXEL_SCALE));
         const texH = Math.max(MIN_TEX_HEIGHT, Math.round(texW * (this.panelH / 2)));
         this.texW = texW;
         this.texH = texH;
         this.offscreen.width = texW;
         this.offscreen.height = texH;
-        const overlayW = Math.max(1, Math.floor(clientWidth * window.devicePixelRatio * UI_PIXEL_SCALE));
-        const overlayH = Math.max(1, Math.floor(clientHeight * window.devicePixelRatio * UI_PIXEL_SCALE));
+        const overlayW = Math.max(1, Math.floor(clientWidth * UI_PIXEL_SCALE));
+        const overlayH = Math.max(1, Math.floor(clientHeight * UI_PIXEL_SCALE));
         if (this.overlayCanvas.width !== overlayW || this.overlayCanvas.height !== overlayH) {
             this.overlayCanvas.width = overlayW;
             this.overlayCanvas.height = overlayH;
@@ -255,7 +255,7 @@ export class PizzaTopUI {
     }
 
     resize(clientWidth: number, _clientHeight: number): void {
-        const texW = Math.max(1, Math.floor(clientWidth * window.devicePixelRatio * UI_PIXEL_SCALE));
+        const texW = Math.max(1, Math.floor(clientWidth * UI_PIXEL_SCALE));
         const texH = Math.max(MIN_TEX_HEIGHT, Math.round(texW * (this.panelH / 2)));
         this.texW = texW;
         this.texH = texH;

@@ -3,7 +3,7 @@
 ---
 
 <section class="pizza-gallery">
-    <h2 class="gallery-title">the pie gallery</h2>
+    <h2 class="gallery-title">pie gallery</h2>
     <p class="gallery-status" id="gallery-status">loading...</p>
     <div id="pizza-gallery-grid" class="gallery-grid"></div>
     <div class="gallery-pagination" id="gallery-pagination" hidden>
@@ -11,6 +11,12 @@
         <span id="gallery-page"></span>
         <button id="gallery-next" class="page-btn">next</button>
     </div>
+</section>
+
+<section class="pie-of-the-day">
+    <p class="potd-title">pie of the day!</p>
+    <p class="potd-status" id="potd-status">loading...</p>
+    <div id="potd-container" class="potd-container"></div>
 </section>
 
 <style>
@@ -33,6 +39,11 @@
         gap: 0.75rem;
     }
 
+    :global(.pizza-card.yours) {
+        border: 2px solid #f6ce4a;
+        box-shadow: 0 0 8px rgba(246, 206, 74, 0.3);
+    }
+
     :global(.pizza-card) {
         position: relative;
         aspect-ratio: 1;
@@ -47,12 +58,16 @@
         image-rendering: pixelated;
     }
 
-    :global(.pizza-seed) {
+    :global(.pizza-hover-container) {
         position: absolute;
         inset: 0;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+        gap: 0.2rem;
+        padding: 0.4rem 0.5rem;
+        overflow-y: auto;
         background: rgba(8, 8, 8, 0.75);
         color: #f6ce4a;
         font-family: monospace;
@@ -60,10 +75,51 @@
         letter-spacing: 0.1em;
         opacity: 0;
         transition: opacity 0.15s;
-        pointer-events: none;
     }
 
-    :global(.pizza-card:hover .pizza-seed) {
+    :global(.pizza-topping-row) {
+        display: flex;
+        align-items: center;
+        gap: 0.35em;
+        font-size: 0.7rem;
+        letter-spacing: 0;
+        width: 100%;
+    }
+
+    :global(.pizza-topping-name) {
+        flex: 1;
+    }
+
+    :global(.pizza-topping-bar) {
+        display: flex;
+        gap: 2px;
+    }
+
+    :global(.pizza-topping-seg) {
+        width: 8px;
+        height: 8px;
+        border: 1px solid rgba(246, 206, 74, 0.4);
+    }
+
+    :global(.pizza-topping-seg.filled) {
+        background: #f6ce4a;
+        border-color: #f6ce4a;
+    }
+
+    :global(.pizza-topping-row.perfect-taste) {
+        color: #4caf74;
+    }
+
+    :global(.pizza-topping-row.perfect-taste .pizza-topping-seg) {
+        border-color: rgba(76, 175, 116, 0.4);
+    }
+
+    :global(.pizza-topping-row.perfect-taste .pizza-topping-seg.filled) {
+        background: #4caf74;
+        border-color: #4caf74;
+    }
+
+    :global(.pizza-card:hover .pizza-hover-container) {
         opacity: 1;
     }
 
@@ -91,20 +147,121 @@
         opacity: 0.3;
         cursor: default;
     }
+
+    .pie-of-the-day {
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .potd-title {
+        margin-bottom: 1rem;
+        font-style: italic;
+    }
+
+    .potd-status {
+        color: var(--muted, #888);
+        font-size: 0.875rem;
+    }
+
+    .potd-container {
+        width: calc((100% - 1.5rem) / 3);
+    }
 </style>
 
 <script>
-    import { renderBakedPizza, type BakedPizza } from "../pizza/app";
+    import { renderBakedPizza, ratePizza, type BakedPizza } from "../pizza/app";
 
     const PAGE_SIZE = 3;
 
-    const API = import.meta.env.PROD
-        ? "https://api.plyr4-pizza.workers.dev/pizzas"
-        : "http://localhost:8787/pizzas";
+    const PIZZAS_API_HOST = import.meta.env.PROD
+        ? "https://api.plyr4-pizza.workers.dev"
+        : "http://localhost:8787";
+
+    const TOPPING_SEGMENTS = 5;
+    const TOPPING_MAX = 20;
+    const CHEESE_MAX = 5;
 
     let allPizzas: BakedPizza[] = [];
+    let potd: BakedPizza | null = null;
     let currentPage = 0;
+    let yourPizzaSeed: string | null = null;
     let cleanups: Array<() => void> = [];
+    let potdCleanup: (() => void) | null = null;
+
+    function buildHoverContainer(pizza: BakedPizza): HTMLSpanElement {
+        const hover = document.createElement("span");
+        hover.className = "pizza-hover-container";
+
+        const createdAtLabel = document.createElement("p");
+        createdAtLabel.className = "pizza-created-at";
+        createdAtLabel.textContent =
+            "baked " +
+            new Date(pizza.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+            });
+
+        const rating = ratePizza(pizza.toppings);
+        const ratingRow = document.createElement("div");
+        const ratingName = document.createElement("span");
+        ratingName.className = "pizza-topping-name";
+        ratingName.textContent = "taste";
+        const ratingBar = document.createElement("span");
+        ratingBar.className = "pizza-topping-bar";
+        const ratingFilled = Math.round((rating / 10) * TOPPING_SEGMENTS);
+        ratingRow.className =
+            ratingFilled === TOPPING_SEGMENTS
+                ? "pizza-topping-row perfect-taste"
+                : "pizza-topping-row";
+        for (let i = 0; i < TOPPING_SEGMENTS; i++) {
+            const seg = document.createElement("span");
+            seg.className =
+                i < ratingFilled
+                    ? "pizza-topping-seg filled"
+                    : "pizza-topping-seg";
+            ratingBar.appendChild(seg);
+        }
+        ratingRow.appendChild(ratingName);
+        ratingRow.appendChild(ratingBar);
+
+        hover.appendChild(createdAtLabel);
+        hover.appendChild(ratingRow);
+
+        let i = 0;
+        for (const [key, count] of Object.entries(pizza.toppings)) {
+            if (count <= 0) continue;
+            const max = key === "cheese" ? CHEESE_MAX : TOPPING_MAX;
+            const filled = Math.min(
+                TOPPING_SEGMENTS,
+                Math.ceil((count / max) * TOPPING_SEGMENTS),
+            );
+
+            const row = document.createElement("div");
+            row.className = "pizza-topping-row";
+
+            const name = document.createElement("span");
+            name.className = "pizza-topping-name";
+            name.textContent = key;
+            const bar = document.createElement("span");
+            bar.className = "pizza-topping-bar";
+            for (let i = 0; i < TOPPING_SEGMENTS; i++) {
+                const seg = document.createElement("span");
+                seg.className =
+                    i < filled
+                        ? "pizza-topping-seg filled"
+                        : "pizza-topping-seg";
+                bar.appendChild(seg);
+            }
+
+            row.appendChild(name);
+            row.appendChild(bar);
+            hover.appendChild(row);
+            i++;
+        }
+
+        return hover;
+    }
 
     function totalPages(): number {
         return Math.max(1, Math.ceil(allPizzas.length / PAGE_SIZE));
@@ -136,16 +293,15 @@
         for (const pizza of page) {
             const card = document.createElement("div");
             card.className = "pizza-card";
+            if (pizza.seed === yourPizzaSeed) card.classList.add("yours");
 
             const canvas = document.createElement("canvas");
             canvas.className = "pizza-canvas";
 
-            const seedLabel = document.createElement("span");
-            seedLabel.className = "pizza-seed";
-            seedLabel.textContent = pizza.seed;
+            const hoverContainer = buildHoverContainer(pizza);
 
             card.appendChild(canvas);
-            card.appendChild(seedLabel);
+            card.appendChild(hoverContainer);
             grid.appendChild(card);
 
             cleanups.push(renderBakedPizza(canvas, pizza));
@@ -157,21 +313,64 @@
         nextBtn.disabled = currentPage >= totalPages() - 1;
     }
 
+    function renderPieOfTheDay(potd: BakedPizza): void {
+        if (potdCleanup) {
+            potdCleanup();
+            potdCleanup = null;
+        }
+
+        const container = document.getElementById("potd-container")!;
+        container.innerHTML = "";
+
+        const card = document.createElement("div");
+        card.className = "pizza-card";
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "pizza-canvas";
+
+        const hoverContainer = buildHoverContainer(potd);
+
+        card.appendChild(canvas);
+        card.appendChild(hoverContainer);
+        container.appendChild(card);
+
+        potdCleanup = renderBakedPizza(canvas, potd);
+    }
+
     async function loadGallery(): Promise<void> {
-        const status = document.getElementById("gallery-status") as HTMLElement;
+        const galleryStatus = document.getElementById(
+            "gallery-status",
+        ) as HTMLElement;
         try {
-            const res = await fetch(API);
+            const res = await fetch(`${PIZZAS_API_HOST}/pizzas`);
             if (!res.ok) throw new Error(`${res.status}`);
             allPizzas = await res.json();
-            for (let i = allPizzas.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [allPizzas[i], allPizzas[j]] = [allPizzas[j], allPizzas[i]];
-            }
-            status.hidden = true;
+            if (allPizzas.length === 0)
+                galleryStatus.textContent =
+                    "no pies yet, bake one to add it to the gallery!";
+            else galleryStatus.hidden = true;
             currentPage = 0;
             renderPage();
         } catch {
-            status.textContent = "could not load pies";
+            galleryStatus.textContent = "couldn't find any pies";
+            // todo: track this
+        }
+
+        const potdStatus = document.getElementById(
+            "potd-status",
+        ) as HTMLElement;
+        try {
+            const res = await fetch(`${PIZZAS_API_HOST}/potd`);
+            if (!res.ok) throw new Error(`${res.status}`);
+            potd = await res.json();
+            if (potd === null) {
+                potdStatus.textContent = "sorry, come back later";
+                return;
+            } else potdStatus.hidden = true;
+            renderPieOfTheDay(potd);
+        } catch {
+            potdStatus.textContent = "couldn't find any pies";
+            // todo: track this
         }
     }
 
@@ -191,8 +390,9 @@
 
     window.addEventListener("pizza:baked", async (e: Event) => {
         const pizza = (e as CustomEvent<BakedPizza>).detail;
+        yourPizzaSeed = pizza.seed;
         try {
-            await fetch(API, {
+            await fetch(`${PIZZAS_API_HOST}/pizzas`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(pizza),

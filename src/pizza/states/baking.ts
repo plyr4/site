@@ -3,7 +3,7 @@ import {
 } from "../model";
 import type { PizzaView } from "../view";
 import type { PizzaState } from "./state";
-import type { PizzaUI, ButtonHit } from "../ui";
+import type { PizzaUI, PizzaTopUI, ButtonHit } from "../ui";
 import { Baked } from "./baked";
 
 const DOTS_INTERVAL_MS = 400;
@@ -14,6 +14,8 @@ export class Baking implements PizzaState {
     onEnter(model: PizzaModel, view: PizzaView): void {
         model.state = GameState.Baking;
         model.bakingProgress = 0;
+        view.startHeat();
+        view.startSteam();
     }
 
     update(dt: number, model: PizzaModel, view: PizzaView): PizzaState | null {
@@ -31,7 +33,13 @@ export class Baking implements PizzaState {
         const dots = ".".repeat(Math.floor(Date.now() / DOTS_INTERVAL_MS) % DOTS_STEPS);
         const blankDots = " ".repeat(dots.length);
         ui.begin();
-        ui.label(`${blankDots}BAKING${dots}`, COLOR_BAKING_LABEL, 0);
+        ui.statusBadge(`${blankDots}BAKING${dots}`, COLOR_BAKING_LABEL, 0);
         ui.end();
+    }
+
+    drawTopUI(model: PizzaModel, topUi: PizzaTopUI): void {
+        topUi.begin();
+        topUi.label("IT'S PIZZA TIME");
+        topUi.end();
     }
 }

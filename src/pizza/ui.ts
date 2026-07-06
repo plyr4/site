@@ -5,6 +5,7 @@ export const MAX_ROWS = 3;
 const PANEL_BOTTOM = -1.0;
 const MIN_TEX_HEIGHT = 8;
 const BTN_PADDING = 2;
+const BTN_GAP = 6;
 const BTN_FONT_RATIO = 0.5;
 const MIN_BTN_FONT_SZ = 6;
 const LABEL_FONT_RATIO = 0.42;
@@ -15,7 +16,7 @@ const COLOR_BTN_BORDER = "#c78f36";
 const COLOR_BTN_TEXT = "#f6ce4a";
 const COLOR_LABEL_DEFAULT = "#c8c8c8";
 
-export type ButtonHit = "minus" | "plus" | "build" | "bake" | "retry" | "toppingPrev" | "toppingNext" | null;
+export type ButtonHit = "minus" | "plus" | "build" | "bake" | "clear" | "retry" | "toppingPrev" | "toppingNext" | null;
 
 interface ButtonRegion {
     id: ButtonHit;
@@ -103,6 +104,26 @@ export class PizzaUI {
         this.regions.push({ id, x1, x2: x1 + btnSz, y1: y, y2: y + btnSz });
     }
 
+    leftOfCenterBtn(label: string, id: ButtonHit, row = 0): void {
+        const { ctx, btnFontSz } = this;
+        const x1 = BTN_PADDING;
+        const w = this.btnCX1 - BTN_PADDING - BTN_GAP;
+        const h = this.btnSz;
+        const rowY = (MAX_ROWS - 1 - row) * this.rowH;
+        const y = rowY + BTN_PADDING;
+        ctx.fillStyle = COLOR_BTN_BG;
+        ctx.fillRect(x1, y, w, h);
+        ctx.strokeStyle = COLOR_BTN_BORDER;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x1 + 0.5, y + 0.5, w - 1, h - 1);
+        ctx.fillStyle = COLOR_BTN_TEXT;
+        ctx.font = `bold ${btnFontSz}px monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(label, x1 + w / 2, y + h / 2);
+        this.regions.push({ id, x1, x2: x1 + w, y1: y, y2: y + h });
+    }
+
     centeredBtn(label: string, id: ButtonHit, row = 0): void {
         const { ctx, btnFontSz } = this;
         const x1 = this.btnCX1;
@@ -121,6 +142,25 @@ export class PizzaUI {
         ctx.textBaseline = "middle";
         ctx.fillText(label, x1 + w / 2, y + h / 2);
         this.regions.push({ id, x1, x2: x1 + w, y1: y, y2: y + h });
+    }
+
+    statusBadge(text: string, color = COLOR_LABEL_DEFAULT, row = 0): void {
+        const { ctx, btnFontSz } = this;
+        const x1 = this.btnCX1;
+        const w = this.btnCX2 - this.btnCX1;
+        const h = this.btnSz;
+        const rowY = (MAX_ROWS - 1 - row) * this.rowH;
+        const y = rowY + BTN_PADDING;
+        ctx.fillStyle = COLOR_BTN_BG;
+        ctx.fillRect(x1, y, w, h);
+        ctx.strokeStyle = COLOR_BTN_BORDER;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x1 + 0.5, y + 0.5, w - 1, h - 1);
+        ctx.fillStyle = color;
+        ctx.font = `bold ${btnFontSz}px monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x1 + w / 2, y + h / 2);
     }
 
     label(text: string, color = COLOR_LABEL_DEFAULT, row = 0): void {
@@ -146,5 +186,58 @@ export class PizzaUI {
             if (tx >= region.x1 && tx <= region.x2 && ty >= region.y1 && ty <= region.y2) return region.id;
         }
         return null;
+    }
+}
+
+export class PizzaTopUI {
+    private offscreen: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D;
+    private texW = 1;
+    private texH = 1;
+    private labelFontSz = 10;
+
+    readonly panelH: number = ROW_H_NDC;
+    readonly panelY: number = 1.0 - ROW_H_NDC / 2;
+
+    readonly tex: THREE.CanvasTexture;
+
+    constructor() {
+        this.offscreen = document.createElement("canvas");
+        this.offscreen.width = 1;
+        this.offscreen.height = 1;
+        this.ctx = this.offscreen.getContext("2d")!;
+
+        this.tex = new THREE.CanvasTexture(this.offscreen);
+        this.tex.generateMipmaps = false;
+        this.tex.magFilter = THREE.LinearFilter;
+        this.tex.minFilter = THREE.LinearFilter;
+    }
+
+    resize(canvasClientWidth: number): void {
+        const texW = Math.max(1, Math.floor(canvasClientWidth * window.devicePixelRatio));
+        const texH = Math.max(MIN_TEX_HEIGHT, Math.round(texW * (this.panelH / 2)));
+        this.texW = texW;
+        this.texH = texH;
+        this.offscreen.width = texW;
+        this.offscreen.height = texH;
+        this.labelFontSz = Math.max(MIN_LABEL_FONT_SZ, Math.floor(texH * LABEL_FONT_RATIO));
+    }
+
+    begin(): void {
+        this.ctx.imageSmoothingEnabled = false;
+        this.ctx.clearRect(0, 0, this.texW, this.texH);
+    }
+
+    end(): void {
+        this.tex.needsUpdate = true;
+    }
+
+    label(text: string, color = COLOR_LABEL_DEFAULT): void {
+        const { ctx, texW, texH, labelFontSz } = this;
+        ctx.fillStyle = color;
+        ctx.font = `bold ${labelFontSz}px monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, texW / 2, texH / 2);
     }
 }

@@ -3,21 +3,19 @@ import {
 } from "../model";
 import type { PizzaView } from "../view";
 import type { PizzaState } from "./state";
-import type { PizzaUI, ButtonHit } from "../ui";
-import { Start } from "./start";
+import type { PizzaUI, PizzaTopUI, ButtonHit } from "../ui";
+import { Build } from "./build";
 
 export class Baked implements PizzaState {
     onEnter(model: PizzaModel, view: PizzaView): void {
         model.state = GameState.Baked;
-        view.startSteam();
+        view.stopHeat();
+        const toppings: Record<string, number> = {};
+        for (const t of view.allToppings) {
+            toppings[t.label.toLowerCase()] = t.count;
+        }
         window.dispatchEvent(new CustomEvent("pizza:baked", {
-            detail: {
-                seed: model.seed,
-                toppings: {
-                    pepperoni: model.pepperoniCount,
-                    cheese: model.cheeseLevel,
-                },
-            },
+            detail: { seed: model.seed, toppings },
         }));
     }
 
@@ -29,7 +27,7 @@ export class Baked implements PizzaState {
         if (hit === "retry") {
             resetModel(model);
             view.rebuild(model);
-            return new Start();
+            return new Build();
         }
         return null;
     }
@@ -38,5 +36,11 @@ export class Baked implements PizzaState {
         ui.begin();
         ui.centeredBtn("MAKE ANOTHER", "retry");
         ui.end();
+    }
+
+    drawTopUI(model: PizzaModel, topUi: PizzaTopUI): void {
+        topUi.begin();
+        topUi.label("IT'S PIZZA TIME");
+        topUi.end();
     }
 }

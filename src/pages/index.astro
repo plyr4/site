@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import GameCard from "../components/GameCard.astro";
 import ToolCard from "../components/ToolCard.astro";
+import PizzaOfTheDay from "../components/PizzaOfTheDay.astro";
 import { unityTools } from "../content/tools/tools";
 import { projects } from "../content/projects/projects";
 import { getCollection } from "astro:content";
@@ -36,11 +37,20 @@ function formatDate(date: Date) {
     <section class="section" id="about">
       <p class="prose">
         my name is dave
-        <br />i live in minneapolis, working for Target in engineering infrastructure
+        <br />i live in minneapolis, working for Target in engineering
+        infrastructure
         <br />i studied CS at Michigan, and i make games in my free time
         <br />
-        <br />
-        <p class="tagline"><a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/pizza`}>make a pizza</a> before you go!</p>
+      </p>
+    </section>
+
+    <section class="section">
+      <PizzaOfTheDay title="today's pie of the day" />
+      <br />
+      <p class="tagline">
+        <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/pizza`}
+          >make a pizza</a
+        > before you go!
       </p>
     </section>
 

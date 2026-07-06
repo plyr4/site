@@ -1,54 +1,30 @@
 ---
-
+const { title = "pie of the day!" } = Astro.props;
 ---
 
-<section class="pizza-gallery">
-    <h2 class="gallery-title">pie gallery</h2>
-    <p class="gallery-status" id="gallery-status">loading...</p>
-    <div id="pizza-gallery-grid" class="gallery-grid"></div>
-    <div class="gallery-pagination" id="gallery-pagination" hidden>
-        <button id="gallery-prev" class="page-btn">prev</button>
-        <span id="gallery-page"></span>
-        <button id="gallery-next" class="page-btn">next</button>
-    </div>
+<section class="pie-of-the-day">
+    <p class="potd-title">{title}</p>
+    <p class="potd-status" id="potd-status">loading...</p>
+    <div id="potd-container" class="potd-container"></div>
 </section>
 
 <style>
-    .pizza-gallery {
+    .pie-of-the-day {
         width: 100%;
     }
 
-    .gallery-title {
+    .potd-title {
         margin-bottom: 1rem;
+        font-style: italic;
     }
 
-    .gallery-status {
+    .potd-status {
         color: var(--muted, #888);
         font-size: 0.875rem;
     }
 
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.75rem;
-    }
-
-    :global(.pizza-card.yours) {
-        border: 2px solid #f6ce4a;
-        box-shadow: 0 0 12px rgba(246, 206, 74, 0.3);
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 0 12px rgba(246, 206, 74, 0.3);
-        }
-        50% {
-            box-shadow: 0 0 12px rgba(246, 206, 74, 0.6);
-        }
-        100% {
-            box-shadow: 0 0 12px rgba(246, 206, 74, 0.3);
-        }
+    .potd-container {
+        width: calc((100% - 1.5rem) / 3);
     }
 
     :global(.pizza-card) {
@@ -129,37 +105,10 @@
     :global(.pizza-card:hover .pizza-hover-container) {
         opacity: 1;
     }
-
-    .gallery-pagination {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 1rem;
-        font-family: monospace;
-        font-size: 0.875rem;
-        color: var(--muted, #888);
-    }
-
-    .page-btn {
-        background: #080808;
-        border: 1px solid var(--border);
-        color: #f6ce4a;
-        font-family: monospace;
-        font-size: 0.875rem;
-        padding: 0.25rem 0.75rem;
-        cursor: pointer;
-    }
-
-    .page-btn:disabled {
-        opacity: 0.3;
-        cursor: default;
-    }
 </style>
 
 <script>
     import { renderBakedPizza, ratePizza, type BakedPizza } from "../pizza/app";
-
-    const PAGE_SIZE = 3;
 
     const PIZZAS_API_HOST = import.meta.env.PROD
         ? "https://api.plyr4-pizza.workers.dev"
@@ -169,10 +118,7 @@
     const TOPPING_MAX = 20;
     const CHEESE_MAX = 5;
 
-    let allPizzas: BakedPizza[] = [];
-    let currentPage = 0;
-    let yourPizzaSeed: string | null = null;
-    let cleanups: Array<() => void> = [];
+    let potdCleanup: (() => void) | null = null;
 
     function buildHoverContainer(pizza: BakedPizza): HTMLSpanElement {
         const hover = document.createElement("span");
@@ -214,7 +160,6 @@
         hover.appendChild(createdAtLabel);
         hover.appendChild(ratingRow);
 
-        let i = 0;
         for (const [key, count] of Object.entries(pizza.toppings)) {
             if (count <= 0) continue;
             const max = key === "cheese" ? CHEESE_MAX : TOPPING_MAX;
@@ -243,108 +188,51 @@
             row.appendChild(name);
             row.appendChild(bar);
             hover.appendChild(row);
-            i++;
         }
 
         return hover;
     }
 
-    function totalPages(): number {
-        return Math.max(1, Math.ceil(allPizzas.length / PAGE_SIZE));
-    }
-
-    function renderPage(): void {
-        cleanups.forEach((fn) => fn());
-        cleanups = [];
-
-        const grid = document.getElementById("pizza-gallery-grid")!;
-        const pagination = document.getElementById(
-            "gallery-pagination",
-        ) as HTMLElement;
-        const pageSpan = document.getElementById("gallery-page")!;
-        const prevBtn = document.getElementById(
-            "gallery-prev",
-        ) as HTMLButtonElement;
-        const nextBtn = document.getElementById(
-            "gallery-next",
-        ) as HTMLButtonElement;
-
-        grid.innerHTML = "";
-
-        const page = allPizzas.slice(
-            currentPage * PAGE_SIZE,
-            (currentPage + 1) * PAGE_SIZE,
-        );
-
-        for (const pizza of page) {
-            const card = document.createElement("div");
-            card.className = "pizza-card";
-            if (pizza.seed === yourPizzaSeed) card.classList.add("yours");
-
-            const canvas = document.createElement("canvas");
-            canvas.className = "pizza-canvas";
-
-            const hoverContainer = buildHoverContainer(pizza);
-
-            card.appendChild(canvas);
-            card.appendChild(hoverContainer);
-            grid.appendChild(card);
-
-            cleanups.push(renderBakedPizza(canvas, pizza));
+    function renderPotd(potd: BakedPizza): void {
+        if (potdCleanup) {
+            potdCleanup();
+            potdCleanup = null;
         }
 
-        pagination.hidden = totalPages() <= 1;
-        pageSpan.textContent = `${currentPage + 1} / ${totalPages()}`;
-        prevBtn.disabled = currentPage === 0;
-        nextBtn.disabled = currentPage >= totalPages() - 1;
+        const container = document.getElementById("potd-container")!;
+        container.innerHTML = "";
+
+        const card = document.createElement("div");
+        card.className = "pizza-card";
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "pizza-canvas";
+
+        card.appendChild(canvas);
+        card.appendChild(buildHoverContainer(potd));
+        container.appendChild(card);
+
+        potdCleanup = renderBakedPizza(canvas, potd);
     }
 
-    async function loadGallery(): Promise<void> {
-        const galleryStatus = document.getElementById(
-            "gallery-status",
+    async function loadPotd(): Promise<void> {
+        const potdStatus = document.getElementById(
+            "potd-status",
         ) as HTMLElement;
         try {
-            const res = await fetch(`${PIZZAS_API_HOST}/pizzas`);
+            const res = await fetch(`${PIZZAS_API_HOST}/potd`);
             if (!res.ok) throw new Error(`${res.status}`);
-            allPizzas = await res.json();
-            if (allPizzas.length === 0)
-                galleryStatus.textContent =
-                    "no pies yet, bake one to add it to the gallery!";
-            else galleryStatus.hidden = true;
-            currentPage = 0;
-            renderPage();
+            const potd: BakedPizza | null = await res.json();
+            if (potd === null) {
+                potdStatus.textContent = "sorry, come back later";
+                return;
+            }
+            potdStatus.hidden = true;
+            renderPotd(potd);
         } catch {
-            galleryStatus.textContent = "couldn't find any pies";
-            // todo: track this
+            potdStatus.textContent = "couldn't find any pies";
         }
     }
 
-    document.getElementById("gallery-prev")!.addEventListener("click", () => {
-        if (currentPage > 0) {
-            currentPage--;
-            renderPage();
-        }
-    });
-
-    document.getElementById("gallery-next")!.addEventListener("click", () => {
-        if (currentPage < totalPages() - 1) {
-            currentPage++;
-            renderPage();
-        }
-    });
-
-    window.addEventListener("pizza:baked", async (e: Event) => {
-        const pizza = (e as CustomEvent<BakedPizza>).detail;
-        yourPizzaSeed = pizza.seed;
-        try {
-            await fetch(`${PIZZAS_API_HOST}/pizzas`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(pizza),
-            });
-        } catch {}
-        await loadGallery();
-    });
-
-    loadGallery();
+    loadPotd();
 </script>

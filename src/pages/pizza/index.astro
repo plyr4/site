@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import PizzaMaker from "../../components/PizzaMaker.astro";
 import PizzaGallery from "../../components/PizzaGallery.astro";
+import PizzaOfTheDay from "../../components/PizzaOfTheDay.astro";
 ---
 
 <Base title="pizza" description="internet pizza shop">
@@ -10,7 +11,9 @@ import PizzaGallery from "../../components/PizzaGallery.astro";
             <div class="hero-inner">
                 <p class="name-title">pizza shop</p>
                 <p class="tagline">create your perfect pizza</p>
-                <p class="tagline">baking a pie adds it to the <strong>pie gallery</strong></p>
+                <p class="tagline">
+                    baking a pie adds it to the <strong>pie gallery</strong>
+                </p>
             </div>
         </section>
 
@@ -20,6 +23,10 @@ import PizzaGallery from "../../components/PizzaGallery.astro";
 
         <section class="section gallery">
             <PizzaGallery />
+        </section>
+
+        <section class="section gallery">
+            <PizzaOfTheDay />
         </section>
     </div>
 </Base>

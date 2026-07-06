@@ -1,6 +1,6 @@
 export const ROW_H_NDC = 0.22;
 export const MAX_ROWS = 3;
-const UI_PIXEL_SCALE = 0.22;
+const UI_PIXEL_SCALE = 0.64;
 const PANEL_BOTTOM = -1.0;
 const MIN_TEX_HEIGHT = 8;
 const BTN_PADDING = 2;

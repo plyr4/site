@@ -87,7 +87,7 @@ export class Onion implements Topping {
     readonly group = new THREE.Group();
     readonly label = "ONION";
     count = 0;
-    private readonly maxCount = MAX_ONION;
+    readonly maxCount = MAX_ONION;
     private placements: OnionPlacement[] = [];
     private readonly matOnion = new THREE.MeshBasicMaterial({ color: COLOR_ONION.clone() });
 

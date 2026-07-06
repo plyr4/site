@@ -81,7 +81,7 @@ export class Ham implements Topping {
     readonly group = new THREE.Group();
     readonly label = "HAM";
     count = 0;
-    private readonly maxCount = MAX_HAM;
+    readonly maxCount = MAX_HAM;
     private placements: HamPlacement[] = [];
     private readonly matFill = new THREE.MeshBasicMaterial({ color: COLOR_HAM_FILL.clone() });
     private readonly matLine = new THREE.LineBasicMaterial({ color: COLOR_HAM_LINE });

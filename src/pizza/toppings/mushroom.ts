@@ -50,7 +50,7 @@ export class Mushroom implements Topping {
     readonly group = new THREE.Group();
     readonly label = "MUSHROOM";
     count = 0;
-    private readonly maxCount = MAX_MUSHROOM;
+    readonly maxCount = MAX_MUSHROOM;
     private placements: MushroomPlacement[] = [];
     private readonly matStem = new THREE.MeshBasicMaterial({ color: COLOR_STEM.clone() });
     private readonly matCap = new THREE.MeshBasicMaterial({ color: COLOR_CAP.clone() });

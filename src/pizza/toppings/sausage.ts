@@ -52,7 +52,7 @@ export class Sausage implements Topping {
     readonly group = new THREE.Group();
     readonly label = "SAUSAGE";
     count = 0;
-    private readonly maxCount = MAX_SAUSAGE;
+    readonly maxCount = MAX_SAUSAGE;
     private placements: SausagePlacement[] = [];
     private readonly matSausage = new THREE.MeshBasicMaterial({ color: COLOR_SAUSAGE.clone() });
 

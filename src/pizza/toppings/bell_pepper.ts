@@ -87,7 +87,7 @@ export class BellPepper implements Topping {
     readonly group = new THREE.Group();
     readonly label = "BELL PEPPER";
     count = 0;
-    private readonly maxCount = MAX_BELL_PEPPER;
+    readonly maxCount = MAX_BELL_PEPPER;
     private placements: BellPepperPlacement[] = [];
     private readonly matPepper = new THREE.MeshBasicMaterial({ color: COLOR_PEPPER.clone() });
 

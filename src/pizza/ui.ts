@@ -11,10 +11,13 @@ const MIN_BTN_FONT_SZ = 6;
 const LABEL_FONT_RATIO = 0.42;
 const MIN_LABEL_FONT_SZ = 4;
 const CENTER_BTN_WIDTH_RATIO = 0.5;
-const COLOR_BTN_BG = "#080808";
+const COLOR_BTN_BG = "#151515";
 const COLOR_BTN_BORDER = "#c78f36";
 const COLOR_BTN_TEXT = "#f6ce4a";
 const COLOR_LABEL_DEFAULT = "#c8c8c8";
+const COLOR_BAR_BG = "#151515";
+const COLOR_BAR_FILL = "#856910";
+const COLOR_BAR_BORDER = "#c78f36";
 
 export type ButtonHit = "minus" | "plus" | "build" | "bake" | "clear" | "retry" | "toppingPrev" | "toppingNext" | null;
 
@@ -170,6 +173,37 @@ export class PizzaUI {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(text, texW / 2, (MAX_ROWS - 1 - row) * rowH + rowH / 2);
+    }
+
+    progressBar(count: number, maxCount: number, row = 0): void {
+        if (maxCount <= 0) return;
+        const { ctx, btnLX1, btnRX1, btnSz, rowH } = this;
+        const x1 = btnLX1 + btnSz + BTN_GAP;
+        const x2 = btnRX1 - BTN_GAP;
+        const availW = x2 - x1;
+        if (availW <= 0) return;
+
+        const SEG_GAP = 0;
+        const segW = (availW - SEG_GAP * (maxCount - 1)) / maxCount;
+        const barH = Math.max(4, Math.floor(rowH * .7));
+        const rowY = (MAX_ROWS - 1 - row) * rowH;
+        const y = Math.floor(rowY + (rowH - barH) / 2);
+
+        for (let i = 0; i < maxCount; i++) {
+            const sx = Math.round(x1 + i * (segW + SEG_GAP));
+            const ex = i < maxCount - 1
+                ? Math.round(x1 + (i + 1) * (segW + SEG_GAP) - SEG_GAP)
+                : Math.round(x2);
+            const sw = ex - sx;
+            const filled = i < count;
+            ctx.fillStyle = filled ? COLOR_BAR_FILL : COLOR_BAR_BG;
+            ctx.fillRect(sx, y, sw, barH);
+            if (!filled) {
+                ctx.strokeStyle = COLOR_BAR_BORDER;
+                ctx.lineWidth = 6;
+                ctx.strokeRect(sx + 0.5, y + 0.5, sw - 1, barH - 1);
+            }
+        }
     }
 
     hitTest(e: MouseEvent, canvas: HTMLCanvasElement): ButtonHit {

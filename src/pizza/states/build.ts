@@ -8,7 +8,6 @@ import type { Topping } from "../toppings/topping";
 import * as States from "./index";
 import * as Toppings from "../toppings";
 
-const COLOR_VALUE_LABEL = "#f6ce4a";
 const COLOR_TOPPING_LABEL = "#c8c8c8";
 
 export class Build implements PizzaState {
@@ -52,7 +51,7 @@ export class Build implements PizzaState {
 
         ui.sideBtn("left", "\u2212", "minus", 1);
         ui.sideBtn("right", "+", "plus", 1);
-        ui.label(topping.valueLabel(model), COLOR_VALUE_LABEL, 1);
+        ui.progressBar(topping.count, topping.maxCount, 1);
 
         ui.sideBtn("left", "<", "toppingPrev", 2);
         ui.sideBtn("right", ">", "toppingNext", 2);
@@ -62,7 +61,7 @@ export class Build implements PizzaState {
 
     drawTopUI(model: PizzaModel, topUi: PizzaTopUI): void {
         topUi.begin();
-        topUi.label("IT'S PIZZA TIME");
+        topUi.label("CUSTOMIZE YOUR PIZZA");
         topUi.end();
     }
 }

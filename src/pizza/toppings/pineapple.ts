@@ -73,7 +73,7 @@ export class Pineapple implements Topping {
     readonly group = new THREE.Group();
     readonly label = "PINEAPPLE";
     count = 0;
-    private readonly maxCount = MAX_PINEAPPLE;
+    readonly maxCount = MAX_PINEAPPLE;
     private placements: PineapplePlacement[] = [];
     private readonly matPineapple = new THREE.MeshBasicMaterial({ color: COLOR_PINEAPPLE.clone() });
     private readonly matLine = new THREE.LineBasicMaterial({ color: COLOR_PINEAPPLE_LINE });

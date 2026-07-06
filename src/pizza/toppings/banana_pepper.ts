@@ -99,7 +99,7 @@ export class BananaPepper implements Topping {
     readonly group = new THREE.Group();
     readonly label = "BANANA PEPPER";
     count = 0;
-    private readonly maxCount = MAX_BANANA_PEPPER;
+    readonly maxCount = MAX_BANANA_PEPPER;
     private placements: BananaPepperPlacement[] = [];
     private readonly matPepper = new THREE.MeshBasicMaterial({ color: COLOR_BANANA_PEPPER.clone() });
 

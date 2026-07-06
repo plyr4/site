@@ -7,6 +7,7 @@ export interface Topping {
     readonly group: THREE.Group;
     readonly label: string;
     count: number;
+    readonly maxCount: number;
     valueLabel(model: PizzaModel): string;
     increase(model: PizzaModel): void;
     decrease(model: PizzaModel): void;

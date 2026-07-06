@@ -92,7 +92,7 @@ export class BlackOlive implements Topping {
     readonly group = new THREE.Group();
     readonly label = "BLACK OLIVE";
     count = 0;
-    private readonly maxCount = MAX_BLACK_OLIVE;
+    readonly maxCount = MAX_BLACK_OLIVE;
     private placements: BlackOlivePlacement[] = [];
     private readonly matOlive = new THREE.MeshBasicMaterial({ color: COLOR_OLIVE.clone() });
 

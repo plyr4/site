@@ -41,7 +41,20 @@
 
     :global(.pizza-card.yours) {
         border: 2px solid #f6ce4a;
-        box-shadow: 0 0 8px rgba(246, 206, 74, 0.3);
+        box-shadow: 0 0 12px rgba(246, 206, 74, 0.3);
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 12px rgba(246, 206, 74, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 12px rgba(246, 206, 74, 0.6);
+        }
+        100% {
+            box-shadow: 0 0 12px rgba(246, 206, 74, 0.3);
+        }
     }
 
     :global(.pizza-card) {

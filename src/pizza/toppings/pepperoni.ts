@@ -44,7 +44,7 @@ export class Pepperoni implements Topping {
     readonly group = new THREE.Group();
     readonly label = "PEPPERONI";
     count = 0;
-    private readonly maxCount = MAX_PEPPERONI;
+    readonly maxCount = MAX_PEPPERONI;
     private positions: [number, number][] = [];
     private readonly matFill = new THREE.MeshBasicMaterial({ color: COLOR_PEP_FILL_RAW.clone() });
     private readonly matLine = new THREE.LineBasicMaterial({ color: COLOR_PEP_LINE });

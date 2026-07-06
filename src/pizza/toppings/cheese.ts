@@ -55,6 +55,7 @@ export class Cheese implements Topping {
     readonly group = new THREE.Group();
     readonly label = "CHEESE";
     count = 0;
+    readonly maxCount = MAX_CHEESE;
     private readonly matFill = new THREE.MeshBasicMaterial({ vertexColors: true });
     private cheeseMesh: THREE.Mesh | null = null;
     private varBuffer: Float32Array = new Float32Array(0);

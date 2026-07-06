@@ -40,7 +40,7 @@ export class Baked implements PizzaState {
 
     drawTopUI(model: PizzaModel, topUi: PizzaTopUI): void {
         topUi.begin();
-        topUi.label("IT'S PIZZA TIME");
+        topUi.label("ENJOY YOUR PIZZA");
         topUi.end();
     }
 }

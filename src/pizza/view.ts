@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { makeWavyCircle, makeWavyRing } from "./geometry";
-import { ROW_H_NDC, MAX_ROWS } from "./ui";
 import {
     PIZZA_RADIUS,
     CRUST_WIDTH,
@@ -85,9 +84,6 @@ export class PizzaView {
     private matOutline: THREE.LineBasicMaterial;
     private matCrustLine: THREE.LineBasicMaterial;
 
-    private uiPlane: THREE.Mesh | null = null;
-    private topUiPlane: THREE.Mesh | null = null;
-    private uiTex: THREE.CanvasTexture | null;
     private heatMat: THREE.MeshBasicMaterial | null = null;
     private heatActive = false;
     private heatFadeEndTime = -1;
@@ -115,7 +111,7 @@ export class PizzaView {
         prevTCycle: number;
     }> = [];
 
-    constructor(canvas: HTMLCanvasElement, uiTex: THREE.CanvasTexture | null, zoom = 1, topUiTex: THREE.CanvasTexture | null = null) {
+    constructor(canvas: HTMLCanvasElement, zoom = 1) {
         this.canvas = canvas;
 
         this.scene = new THREE.Scene();
@@ -142,7 +138,6 @@ export class PizzaView {
 
         this.uiScene = new THREE.Scene();
         this.uiCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
-        this.uiTex = uiTex;
 
         const heatCanvas = document.createElement("canvas");
         heatCanvas.width = HEAT_CANVAS_SIZE;
@@ -171,30 +166,6 @@ export class PizzaView {
         const heatPlane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.heatMat);
         heatPlane.renderOrder = 0;
         this.uiScene.add(heatPlane);
-
-        if (uiTex !== null) {
-            const initPanelH = ROW_H_NDC * MAX_ROWS;
-            const initPanelY = -1.0 + initPanelH / 2;
-            this.uiPlane = new THREE.Mesh(
-                new THREE.PlaneGeometry(2, initPanelH),
-                new THREE.MeshBasicMaterial({ map: uiTex, transparent: true, depthWrite: false })
-            );
-            this.uiPlane.position.set(0, initPanelY, 0);
-            this.uiPlane.renderOrder = 1;
-            this.uiScene.add(this.uiPlane);
-        }
-
-        if (topUiTex !== null) {
-            const topPanelH = ROW_H_NDC;
-            const topPanelY = 1.0 - topPanelH / 2;
-            this.topUiPlane = new THREE.Mesh(
-                new THREE.PlaneGeometry(2, topPanelH),
-                new THREE.MeshBasicMaterial({ map: topUiTex, transparent: true, depthWrite: false })
-            );
-            this.topUiPlane.position.set(0, topPanelY, 0);
-            this.topUiPlane.renderOrder = 1;
-            this.uiScene.add(this.topUiPlane);
-        }
     }
 
     getCanvas(): HTMLCanvasElement {

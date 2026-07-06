@@ -45,10 +45,11 @@ export class PizzaController {
         const next = this.currentState.update(dt, this.model, this.view);
         if (next) this.transition(next);
 
-        this.ui.resize(this.view.getCanvas().clientWidth);
+        const canvas = this.view.getCanvas();
+        this.ui.resize(canvas.clientWidth, canvas.clientHeight);
         this.currentState.drawUI(this.model, this.ui);
 
-        this.topUi.resize(this.view.getCanvas().clientWidth);
+        this.topUi.resize(canvas.clientWidth, canvas.clientHeight);
         this.currentState.drawTopUI(this.model, this.topUi);
 
         this.view.render(this.model, time);

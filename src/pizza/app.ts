@@ -5,11 +5,11 @@ import { PizzaController } from "./controller";
 
 export type BakedPizza = { createdAt: string; seed: string; toppings: Record<string, number> };
 
-export function runPizzaShop(canvas: HTMLCanvasElement): void {
+export function runPizzaShop(canvas: HTMLCanvasElement, uiCanvas: HTMLCanvasElement): void {
     const model = createModel();
-    const ui = new PizzaBottomUI();
-    const topUi = new PizzaTopUI();
-    const view = new PizzaView(canvas, ui.tex, 1, topUi.tex);
+    const ui = new PizzaBottomUI(uiCanvas);
+    const topUi = new PizzaTopUI(uiCanvas);
+    const view = new PizzaView(canvas, 1);
     view.setDefaultToppings(model);
     view.rebuild(model);
     const controller = new PizzaController(model, view, ui, topUi);
@@ -26,7 +26,7 @@ export function runPizzaShop(canvas: HTMLCanvasElement): void {
 
 export function renderBakedPizza(canvas: HTMLCanvasElement, pizza: BakedPizza, zoom = 1.5): () => void {
     const model = createModelFromSeed(pizza.seed);
-    const view = new PizzaView(canvas, null, zoom);
+    const view = new PizzaView(canvas, zoom);
     view.rebuild(model);
     view.allToppings.forEach(t => {
         t.count = pizza.toppings[t.label.toLowerCase()] ?? 0;

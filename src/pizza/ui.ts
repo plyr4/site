@@ -1,7 +1,6 @@
-import * as THREE from "three";
-
 export const ROW_H_NDC = 0.22;
 export const MAX_ROWS = 3;
+const UI_PIXEL_SCALE = 0.22;
 const PANEL_BOTTOM = -1.0;
 const MIN_TEX_HEIGHT = 8;
 const BTN_PADDING = 2;
@@ -47,27 +46,35 @@ export class PizzaUI {
     get panelH(): number { return ROW_H_NDC * MAX_ROWS; }
     get panelY(): number { return PANEL_BOTTOM + this.panelH / 2; }
 
-    readonly tex: THREE.CanvasTexture;
+    private overlayCanvas: HTMLCanvasElement;
+    private overlayCtx: CanvasRenderingContext2D;
+    private overlayW = 1;
+    private overlayH = 1;
 
-    constructor() {
+    constructor(overlayCanvas: HTMLCanvasElement) {
         this.offscreen = document.createElement("canvas");
         this.offscreen.width = 1;
         this.offscreen.height = 1;
         this.ctx = this.offscreen.getContext("2d")!;
-
-        this.tex = new THREE.CanvasTexture(this.offscreen);
-        this.tex.generateMipmaps = false;
-        this.tex.magFilter = THREE.LinearFilter;
-        this.tex.minFilter = THREE.LinearFilter;
+        this.overlayCanvas = overlayCanvas;
+        this.overlayCtx = overlayCanvas.getContext("2d")!;
     }
 
-    resize(canvasClientWidth: number): void {
-        const texW = Math.max(1, Math.floor(canvasClientWidth * window.devicePixelRatio));
+    resize(clientWidth: number, clientHeight: number): void {
+        const texW = Math.max(1, Math.floor(clientWidth * window.devicePixelRatio * UI_PIXEL_SCALE));
         const texH = Math.max(MIN_TEX_HEIGHT, Math.round(texW * (this.panelH / 2)));
         this.texW = texW;
         this.texH = texH;
         this.offscreen.width = texW;
         this.offscreen.height = texH;
+        const overlayW = Math.max(1, Math.floor(clientWidth * window.devicePixelRatio * UI_PIXEL_SCALE));
+        const overlayH = Math.max(1, Math.floor(clientHeight * window.devicePixelRatio * UI_PIXEL_SCALE));
+        if (this.overlayCanvas.width !== overlayW || this.overlayCanvas.height !== overlayH) {
+            this.overlayCanvas.width = overlayW;
+            this.overlayCanvas.height = overlayH;
+        }
+        this.overlayW = overlayW;
+        this.overlayH = overlayH;
         this.rowH = Math.floor(texH / MAX_ROWS);
         this.btnSz = this.rowH - BTN_PADDING * 2;
         this.btnFontSz = Math.max(MIN_BTN_FONT_SZ, Math.floor(this.btnSz * BTN_FONT_RATIO));
@@ -82,11 +89,13 @@ export class PizzaUI {
     begin(): void {
         this.ctx.imageSmoothingEnabled = false;
         this.ctx.clearRect(0, 0, this.texW, this.texH);
+        this.overlayCtx.imageSmoothingEnabled = false;
+        this.overlayCtx.clearRect(0, 0, this.overlayW, this.overlayH);
         this.regions = [];
     }
 
     end(): void {
-        this.tex.needsUpdate = true;
+        this.overlayCtx.drawImage(this.offscreen, 0, this.overlayH - this.texH);
     }
 
     sideBtn(side: "left" | "right", label: string, id: ButtonHit, row = 0): void {
@@ -183,7 +192,7 @@ export class PizzaUI {
         const availW = x2 - x1;
         if (availW <= 0) return;
 
-        const SEG_GAP = 0;
+        const SEG_GAP = 2;
         const segW = (availW - SEG_GAP * (maxCount - 1)) / maxCount;
         const barH = Math.max(4, Math.floor(rowH * .7));
         const rowY = (MAX_ROWS - 1 - row) * rowH;
@@ -200,7 +209,7 @@ export class PizzaUI {
             ctx.fillRect(sx, y, sw, barH);
             if (!filled) {
                 ctx.strokeStyle = COLOR_BAR_BORDER;
-                ctx.lineWidth = 6;
+                ctx.lineWidth = 1;
                 ctx.strokeRect(sx + 0.5, y + 0.5, sw - 1, barH - 1);
             }
         }
@@ -233,22 +242,20 @@ export class PizzaTopUI {
     readonly panelH: number = ROW_H_NDC;
     readonly panelY: number = 1.0 - ROW_H_NDC / 2;
 
-    readonly tex: THREE.CanvasTexture;
+    private overlayCanvas: HTMLCanvasElement;
+    private overlayCtx: CanvasRenderingContext2D;
 
-    constructor() {
+    constructor(overlayCanvas: HTMLCanvasElement) {
         this.offscreen = document.createElement("canvas");
-        this.offscreen.width = 1;
-        this.offscreen.height = 1;
+        this.offscreen.width = 2;
+        this.offscreen.height = 2;
         this.ctx = this.offscreen.getContext("2d")!;
-
-        this.tex = new THREE.CanvasTexture(this.offscreen);
-        this.tex.generateMipmaps = false;
-        this.tex.magFilter = THREE.LinearFilter;
-        this.tex.minFilter = THREE.LinearFilter;
+        this.overlayCanvas = overlayCanvas;
+        this.overlayCtx = overlayCanvas.getContext("2d")!;
     }
 
-    resize(canvasClientWidth: number): void {
-        const texW = Math.max(1, Math.floor(canvasClientWidth * window.devicePixelRatio));
+    resize(clientWidth: number, _clientHeight: number): void {
+        const texW = Math.max(1, Math.floor(clientWidth * window.devicePixelRatio * UI_PIXEL_SCALE));
         const texH = Math.max(MIN_TEX_HEIGHT, Math.round(texW * (this.panelH / 2)));
         this.texW = texW;
         this.texH = texH;
@@ -259,11 +266,12 @@ export class PizzaTopUI {
 
     begin(): void {
         this.ctx.imageSmoothingEnabled = false;
+        this.overlayCtx.imageSmoothingEnabled = false;
         this.ctx.clearRect(0, 0, this.texW, this.texH);
     }
 
     end(): void {
-        this.tex.needsUpdate = true;
+        this.overlayCtx.drawImage(this.offscreen, 0, 0);
     }
 
     label(text: string, color = COLOR_LABEL_DEFAULT): void {

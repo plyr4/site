@@ -21,6 +21,4 @@ we added a dodge roll, and a truck to throw goodies in, and the rest is history.
 
 the late pivot saved our grade and we ended up placing 2nd in a game dev competition hosted by EA
 
-![thrifty-3](../../assets/games/thrifty-2.jpg)
-
 my brother Cam helped us with trailer voiceovers

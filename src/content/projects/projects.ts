@@ -35,9 +35,9 @@ export const projects = [
         href: "https://github.com/plyr4/skelly",
     },
     {
-        title: "ha-laundry",
-        description: "Home Assistant integration",
-        href: "https://github.com/plyr4/ha-laundry",
+        title: "ha-workspace",
+        description: "Home Assistant integrations",
+        href: "https://github.com/plyr4/ha-workspace",
     },
     {
         title: "site",

@@ -14,7 +14,8 @@ const games = (await getCollection("games", ({ data }) => !data.draft)).sort(
   <div class="container">
     <section class="hero">
       <div class="hero-inner">
-        <p class="name-title">games <span class="subtitle">(and tools)</span></p>
+        <p class="name-title">games</p>
+        <p class="tagline">and other stuff i've made, mostly for Unity</p>
       </div>
     </section>
 
@@ -35,7 +36,7 @@ const games = (await getCollection("games", ({ data }) => !data.draft)).sort(
     </section>
 
     <section class="section" id="unity-tools">
-      <h2 class="section-title">unity tools</h2>
+      <h2 class="section-title">other stuff</h2>
       <ul class="game-grid">
         {
           unityTools.map((tool) => (

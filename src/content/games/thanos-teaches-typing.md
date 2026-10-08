@@ -11,4 +11,4 @@ githubLink: https://github.com/dvccllc/ldjam-game-50
 
 my brother Cam and i pair programmed this one in a weekend. he came up with the idea and brought the 3D modeling skills, and i mostly drove the programming and app building
 
-that game jam brought me out of a 3 year game development freeze
+that game jam brought me out of a 3 year game development slump
